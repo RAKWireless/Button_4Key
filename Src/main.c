@@ -28,6 +28,9 @@
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
 #include "board.h"
+#include "sx126x-board.h"
+#include "delay.h"
+//#include "sx126x.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -92,18 +95,23 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
-  //MX_SPI1_Init();
+  MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
-  BoardInitMcu();
+  //BoardInitMcu();
+  unsigned char temp=2;
+  SX126xReset();
+  //SX126xInit();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  LED_Cycle();
-	  //printf("Hello 123\r\n");
-	  //HAL_Delay(1000);
+	  //LED_Cycle();
+	  printf("Hello 123 %02X\r\n",temp);
+	  HAL_Delay(1000);
+	  temp=SX126xReadRegister(0x06BE);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

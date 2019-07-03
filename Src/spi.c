@@ -105,6 +105,13 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* spiHandle)
 } 
 
 /* USER CODE BEGIN 1 */
+uint8_t SpiInOut( uint8_t outData)
+
+{
+	uint8_t retemp;
+	HAL_SPI_TransmitReceive(&hspi1,&outData,&retemp,1,1000);
+	return retemp;
+}
 
 /* USER CODE END 1 */
 
