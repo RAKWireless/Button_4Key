@@ -99,7 +99,10 @@ int main(void)
   /* USER CODE BEGIN 2 */
   //BoardInitMcu();
   unsigned char temp=2;
+  SX126xIoInit();
   SX126xReset();
+  //SX126xWakeup( );
+  //SX126xSetStandby( STDBY_RC );
   //SX126xInit();
   /* USER CODE END 2 */
 
@@ -108,9 +111,9 @@ int main(void)
   while (1)
   {
 	  //LED_Cycle();
-	  printf("Hello 123 %02X\r\n",temp);
+	  printf("RAK	%02X\r\n",temp);
 	  HAL_Delay(1000);
-	  temp=SX126xReadRegister(0x06B8);
+	  temp=SX126xReadRegister(REG_RX_GAIN);
 
     /* USER CODE END WHILE */
 
@@ -167,6 +170,47 @@ void SystemClock_Config(void)
 }
 
 /* USER CODE BEGIN 4 */
+//void OnTxDone( void )
+//{
+//    Radio.Sleep( );
+//    State = TX;
+//    PRINTF("OnTxDone\n\r");
+//}
+//
+//void OnRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
+//{
+//    Radio.Sleep( );
+//    BufferSize = size;
+//    memcpy( Buffer, payload, BufferSize );
+//    RssiValue = rssi;
+//    SnrValue = snr;
+//    State = RX;
+//
+//    PRINTF("OnRxDone\n\r");
+//    PRINTF("RssiValue=%d dBm, SnrValue=%d\n\r", rssi, snr);
+//}
+//
+//void OnTxTimeout( void )
+//{
+//    Radio.Sleep( );
+//    State = TX_TIMEOUT;
+//
+//    PRINTF("OnTxTimeout\n\r");
+//}
+//
+//void OnRxTimeout( void )
+//{
+//    Radio.Sleep( );
+//    State = RX_TIMEOUT;
+//    PRINTF("OnRxTimeout\n\r");
+//}
+//
+//void OnRxError( void )
+//{
+//    Radio.Sleep( );
+//    State = RX_ERROR;
+//    PRINTF("OnRxError\n\r");
+//}
 
 /* USER CODE END 4 */
 
@@ -178,7 +222,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-
+	printf("%s	%d\r\n",__FILE__,__LINE__);
   /* USER CODE END Error_Handler_Debug */
 }
 

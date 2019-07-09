@@ -113,6 +113,7 @@ void SX126xCheckDeviceReady( void )
     if( ( SX126xGetOperatingMode( ) == MODE_SLEEP ) || ( SX126xGetOperatingMode( ) == MODE_RX_DC ) )
     {
         SX126xWakeup( );
+        //printf("%s	%d\r\n",__FILE__,__LINE__);
         // Switch is turned off when device is in sleep mode and turned on is all other modes
         SX126xAntSwOn( );
     }
