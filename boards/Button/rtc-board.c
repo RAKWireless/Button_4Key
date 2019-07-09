@@ -27,6 +27,7 @@
 #include "timer.h"
 #include "gpio.h"
 #include "rtc-board.h"
+#include "main.h"
 
 /*!
  * RTC Time base in ms
@@ -201,6 +202,8 @@ void RtcInit( void )
 
     if( RtcInitialized == false )
     {
+
+
         __HAL_RCC_RTC_ENABLE( );
 
         RtcHandle.Instance = RTC;
@@ -375,8 +378,12 @@ void RtcRecoverMcuStatus( void )
     if( ( __HAL_RCC_GET_SYSCLK_SOURCE( ) == RCC_SYSCLKSOURCE_STATUS_HSI ) ||
         ( __HAL_RCC_GET_SYSCLK_SOURCE( ) == RCC_SYSCLKSOURCE_STATUS_MSI ) )
     {
-        BoardInitMcu( );
+        //BoardInitMcu( );
+
     }
+    SystemClock_Config();
+
+
 }
 
 static void RtcComputeWakeUpTime( void )
@@ -436,7 +443,7 @@ static void RtcStartWakeUpAlarm( uint32_t timeoutValue )
 
     if( HAL_RTC_SetAlarm_IT( &RtcHandle, &alarmStructure, RTC_FORMAT_BIN ) != HAL_OK )
     {
-        assert_param( FAIL );
+    	assert_param( FAIL );
     }
 }
 

@@ -16,104 +16,130 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "spi.h"
 #include "usart.h"
 #include "gpio.h"
 
-/* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
+
 #include "stdio.h"
 #include "board.h"
 #include "sx126x-board.h"
 #include "delay.h"
 #include "sx126x.h"
-/* USER CODE END Includes */
+#include "timer.h"
+#include "rtc-board.h"
+#include "string.h"
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN PTD */
 
-/* USER CODE END PTD */
+int8_t RssiValue = 0;
+int8_t SnrValue = 0;
 
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN PD */
 
-/* USER CODE END PD */
+#define RX_TIMEOUT_VALUE                            1000
+#define BUFFER_SIZE                                 12 // Define the payload size here
 
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN PM */
+const uint8_t PingMsg[] = "PING";
+const uint8_t PongMsg[] = "PONG";
 
-/* USER CODE END PM */
+uint16_t BufferSize = BUFFER_SIZE;
+uint8_t Buffer[BUFFER_SIZE]={0,1,2,3,4,5,0,0,0,0,0};
 
-/* Private variables ---------------------------------------------------------*/
+#define LORA_BANDWIDTH                              0         // [0: 125 kHz,
+                                                              //  1: 250 kHz,
+                                                              //  2: 500 kHz,
+                                                              //  3: Reserved]
+#define LORA_SPREADING_FACTOR                       10        // [SF7..SF12]
+#define LORA_CODINGRATE                             1         // [1: 4/5,
+                                                              //  2: 4/6,
+                                                              //  3: 4/7,
+                                                              //  4: 4/8]
+#define LORA_SYMBOL_TIMEOUT                         5         // Symbols
+#define LORA_PREAMBLE_LENGTH                        8         // Same for Tx and Rx
+#define LORA_FIX_LENGTH_PAYLOAD_ON                  false
+#define LORA_IQ_INVERSION_ON                        false
+/*!
+ * \brief Function to be executed on Radio Tx Done event
+ */
+void OnTxDone( void );
 
-/* USER CODE BEGIN PV */
+/*!
+ * \brief Function to be executed on Radio Rx Done event
+ */
+void OnRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr );
 
-/* USER CODE END PV */
+/*!
+ * \brief Function executed on Radio Tx Timeout event
+ */
+void OnTxTimeout( void );
 
-/* Private function prototypes -----------------------------------------------*/
-void SystemClock_Config(void);
-/* USER CODE BEGIN PFP */
+/*!
+ * \brief Function executed on Radio Rx Timeout event
+ */
+void OnRxTimeout( void );
 
-/* USER CODE END PFP */
+/*!
+ * \brief Function executed on Radio Rx Error event
+ */
+void OnRxError( void );
 
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
 
-/* USER CODE END 0 */
+TimerEvent_t Test_timer;
+void Test_time_callback()
+{
+	printf("Test_time_callback\r\n");
+	TimerStart(&Test_timer);
+}
 
-/**
-  * @brief  The application entry point.
-  * @retval int
-  */
+static RadioEvents_t RadioEvents;
+
 int main(void)
 {
-  /* USER CODE BEGIN 1 */
 
-  /* USER CODE END 1 */
-  
-
-  /* MCU Configuration--------------------------------------------------------*/
-
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
-
-  /* USER CODE BEGIN Init */
-
-  /* USER CODE END Init */
-
-  /* Configure the system clock */
   SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
 
-  /* USER CODE END SysInit */
-
-  /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
   //BoardInitMcu();
-  unsigned char temp=2;
+  unsigned char temp=0;
   SX126xIoInit();
-  SX126xReset();
-  //SX126xWakeup( );
-  //SX126xSetStandby( STDBY_RC );
-  //SX126xInit();
-  /* USER CODE END 2 */
 
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
+  SX126xReset();
+  RtcInit();
+
+
+  TimerInit(&Test_timer,Test_time_callback);
+  TimerSetValue(&Test_timer,2000);
+//  TimerStart(&Test_timer);
+
+  RadioEvents.TxDone = OnTxDone;
+  RadioEvents.RxDone = OnRxDone;
+  RadioEvents.TxTimeout = OnTxTimeout;
+  RadioEvents.RxTimeout = OnRxTimeout;
+  RadioEvents.RxError = OnRxError;
+
+  Radio.Init( &RadioEvents );
+
+  Radio.SetChannel( 868000000 );
+
+  Radio.SetTxConfig( MODEM_LORA, 14, 0, LORA_BANDWIDTH,
+                                     LORA_SPREADING_FACTOR, LORA_CODINGRATE,
+                                     LORA_PREAMBLE_LENGTH, LORA_FIX_LENGTH_PAYLOAD_ON,
+                                     true, 0, 0, LORA_IQ_INVERSION_ON, 3000 );
+
+
   while (1)
   {
+	  Radio.Send( Buffer, BufferSize );
 	  //LED_Cycle();
-	  printf("RAK	%02X\r\n",temp);
-	  HAL_Delay(1000);
-	  temp=SX126xReadRegister(REG_RX_GAIN);
+	  printf("RAK	\r\n");
+	  HAL_Delay(5000);
+	  //temp=SX126xReadRegister(REG_RX_GAIN);
 
     /* USER CODE END WHILE */
 
@@ -137,8 +163,9 @@ void SystemClock_Config(void)
   __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
   /** Initializes the CPU, AHB and APB busses clocks 
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
@@ -167,50 +194,57 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+  PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+  if( HAL_RCCEx_PeriphCLKConfig( &PeriphClkInit ) != HAL_OK )
+  {
+	  assert_param( FAIL );
+  }
+
 }
 
 /* USER CODE BEGIN 4 */
-//void OnTxDone( void )
-//{
-//    Radio.Sleep( );
-//    State = TX;
-//    PRINTF("OnTxDone\n\r");
-//}
-//
-//void OnRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
-//{
-//    Radio.Sleep( );
-//    BufferSize = size;
-//    memcpy( Buffer, payload, BufferSize );
-//    RssiValue = rssi;
-//    SnrValue = snr;
-//    State = RX;
-//
-//    PRINTF("OnRxDone\n\r");
-//    PRINTF("RssiValue=%d dBm, SnrValue=%d\n\r", rssi, snr);
-//}
-//
-//void OnTxTimeout( void )
-//{
-//    Radio.Sleep( );
-//    State = TX_TIMEOUT;
-//
-//    PRINTF("OnTxTimeout\n\r");
-//}
-//
-//void OnRxTimeout( void )
-//{
-//    Radio.Sleep( );
-//    State = RX_TIMEOUT;
-//    PRINTF("OnRxTimeout\n\r");
-//}
-//
-//void OnRxError( void )
-//{
-//    Radio.Sleep( );
-//    State = RX_ERROR;
-//    PRINTF("OnRxError\n\r");
-//}
+void OnTxDone( void )
+{
+    Radio.Sleep( );
+
+    printf("OnTxDone\r\n");
+}
+
+void OnRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
+{
+    Radio.Sleep( );
+    BufferSize = size;
+    memcpy( Buffer, payload, BufferSize );
+    RssiValue = rssi;
+    SnrValue = snr;
+
+
+    printf("OnRxDone\r\n");
+    printf("RssiValue=%d dBm, SnrValue=%d\n\r", rssi, snr);
+}
+
+void OnTxTimeout( void )
+{
+    Radio.Sleep( );
+
+
+    printf("OnTxTimeout\r\n");
+}
+
+void OnRxTimeout( void )
+{
+    Radio.Sleep( );
+
+    printf("OnRxTimeout\r\n");
+}
+
+void OnRxError( void )
+{
+    Radio.Sleep( );
+
+    printf("OnRxError\r\n");
+}
 
 /* USER CODE END 4 */
 

@@ -94,19 +94,20 @@ void TimerStart( TimerEvent_t *obj )
     uint32_t remainingTime = 0;
 
     BoardDisableIrq( );
-
+//    printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
     if( ( obj == NULL ) || ( TimerExists( obj ) == true ) )
     {
         BoardEnableIrq( );
         return;
     }
-
+//    printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
     obj->Timestamp = obj->ReloadValue;
     obj->IsRunning = false;
 
     if( TimerListHead == NULL )
     {
-        TimerInsertNewHeadTimer( obj, obj->Timestamp );
+
+    	TimerInsertNewHeadTimer( obj, obj->Timestamp );
     }
     else
     {
@@ -121,6 +122,7 @@ void TimerStart( TimerEvent_t *obj )
         }
         else
         {
+
             remainingTime = TimerListHead->Timestamp;
         }
 
