@@ -906,6 +906,7 @@ void RadioRx( uint32_t timeout )
 
     if( timeout != 0 )
     {
+    	printf("timeout %d\r\n", timeout);
         TimerSetValue( &RxTimeoutTimer, timeout );
         TimerStart( &RxTimeoutTimer );
     }
@@ -1063,6 +1064,7 @@ void RadioOnRxTimeoutIrq( void )
 void RadioOnDioIrq( void )
 {
     IrqFired = true;
+    RadioIrqProcess();
 }
 
 void RadioIrqProcess( void )

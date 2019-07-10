@@ -360,7 +360,7 @@ void HAL_GPIO_EXTI_Callback( uint16_t gpioPin )
 
     if( GpioIrq[callbackIndex] != NULL )
     {
-    	printf("HAL_GPIO_EXTI_Callback	%d",callbackIndex);
+
     	GpioIrq[callbackIndex]( );
     }
 }

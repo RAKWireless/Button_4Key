@@ -31,6 +31,7 @@
 #include "timer.h"
 #include "rtc-board.h"
 #include "string.h"
+#include "stdbool.h"
 
 
 int8_t RssiValue = 0;
@@ -96,7 +97,7 @@ static RadioEvents_t RadioEvents;
 
 int main(void)
 {
-
+  bool isMaster = false;
   HAL_Init();
   SystemClock_Config();
 
@@ -104,8 +105,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   MX_SPI1_Init();
-  /* USER CODE BEGIN 2 */
-  //BoardInitMcu();
+
   unsigned char temp=0;
   SX126xIoInit();
 
@@ -131,14 +131,29 @@ int main(void)
                                      LORA_SPREADING_FACTOR, LORA_CODINGRATE,
                                      LORA_PREAMBLE_LENGTH, LORA_FIX_LENGTH_PAYLOAD_ON,
                                      true, 0, 0, LORA_IQ_INVERSION_ON, 3000 );
-
-
-  while (1)
+  Radio.SetRxConfig( MODEM_LORA, LORA_BANDWIDTH, LORA_SPREADING_FACTOR,
+                                    LORA_CODINGRATE, 0, LORA_PREAMBLE_LENGTH,
+                                    LORA_SYMBOL_TIMEOUT, LORA_FIX_LENGTH_PAYLOAD_ON,
+                                    0, true, 0, 0, LORA_IQ_INVERSION_ON, true );
+ if(isMaster!=true)
+ {
+	 //Radio.Rx(5000);
+ }
+  while(1)
   {
-	  Radio.Send( Buffer, BufferSize );
+	  if(isMaster==true)
+	  {
+		  Radio.Send( Buffer, BufferSize );
+
+
+
 	  //LED_Cycle();
 	  printf("RAK	\r\n");
-	  HAL_Delay(5000);
+	  HAL_Delay(3000);
+	  }
+	  HAL_Delay(1000);
+
+
 	  //temp=SX126xReadRegister(REG_RX_GAIN);
 
     /* USER CODE END WHILE */
@@ -221,7 +236,8 @@ void OnRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
 
 
     printf("OnRxDone\r\n");
-    printf("RssiValue=%d dBm, SnrValue=%d\n\r", rssi, snr);
+    printf("RssiValue=%d dBm, SnrValue=%d\r\n", rssi, snr);
+
 }
 
 void OnTxTimeout( void )
@@ -237,6 +253,7 @@ void OnRxTimeout( void )
     Radio.Sleep( );
 
     printf("OnRxTimeout\r\n");
+    Radio.Rx(5000);
 }
 
 void OnRxError( void )
@@ -256,7 +273,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-	printf("%s	%d\r\n",__FILE__,__LINE__);
+	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
   /* USER CODE END Error_Handler_Debug */
 }
 
