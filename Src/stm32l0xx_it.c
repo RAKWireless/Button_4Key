@@ -21,10 +21,14 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32l0xx_it.h"
+#include "usart.h"
+#include "stdio.h"
+#include "string.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
-
+extern DMA_HandleTypeDef hdma_usart2_rx;
+extern uint8_t* Receive_buff[255];
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
 
@@ -130,6 +134,47 @@ void SysTick_Handler(void)
   /* USER CODE BEGIN SysTick_IRQn 1 */
 
   /* USER CODE END SysTick_IRQn 1 */
+}
+
+void USAR_UART_IDLECallback(UART_HandleTypeDef *huart)
+{
+    HAL_UART_DMAStop(&huart2);                                                     //停止本次DMA传输
+
+    uint8_t data_length  = USART_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);   //计算接收到的数据长度
+    Receive_buff[data_length]=0;
+
+    printf("Receive Data(length = %d): %s",data_length,(char*)Receive_buff);
+
+    //HAL_UART_Transmit(&huart2,(uint8_t*)Receive_buff,data_length,0x200);                     //测试函数：将接收到的数据打印出去
+    printf("\r\n");
+
+    memset(Receive_buff,0,data_length);                                            //清零接收缓冲区
+    data_length = 0;
+    HAL_UART_Receive_DMA(&huart2, (uint8_t*)Receive_buff, 255);                    //重启开始DMA传输 每次255字节数据
+}
+
+void USER_UART_IRQHandler(UART_HandleTypeDef *huart)
+{
+    if(USART2 == huart2.Instance)                                   //判断是否是串口1
+    {
+        if(RESET != __HAL_UART_GET_FLAG(&huart2, UART_FLAG_IDLE))   //判断是否是空闲中断
+        {
+            __HAL_UART_CLEAR_IDLEFLAG(&huart2);                     //清楚空闲中断标志（否则会一直不断进入中断）
+
+            USAR_UART_IDLECallback(huart);                          //调用中断处理函数
+        }
+    }
+}
+
+
+
+void USART2_IRQHandler(void)
+{
+
+
+    HAL_UART_IRQHandler(&huart2);
+    USER_UART_IRQHandler(&huart2);
+    /* USER CODE END USART1_IRQn 1 */
 }
 
 /******************************************************************************/

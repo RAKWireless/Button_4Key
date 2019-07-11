@@ -25,11 +25,17 @@
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart2;
-
+DMA_HandleTypeDef hdma_usart2_rx;
+uint8_t* Receive_buff[255];
 /* USART2 init function */
 
 void MX_USART2_UART_Init(void)
 {
+
+ __HAL_RCC_DMA1_CLK_ENABLE();
+ HAL_NVIC_SetPriority(DMA1_Channel4_5_6_7_IRQn, 0, 0);
+ HAL_NVIC_EnableIRQ(DMA1_Channel4_5_6_7_IRQn);
+
 
   huart2.Instance = USART2;
   huart2.Init.BaudRate = 115200;
@@ -45,6 +51,18 @@ void MX_USART2_UART_Init(void)
   {
     Error_Handler();
   }
+
+  HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(USART2_IRQn);
+
+
+    /* DMA interrupt init */
+    /* DMA1_Channel4_5_6_7_IRQn interrupt configuration */
+
+
+  __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
+  HAL_UART_Receive_DMA(&huart2, (uint8_t*)Receive_buff, 255);
+
 
 }
 
@@ -71,6 +89,22 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF4_USART2;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    hdma_usart2_rx.Instance = DMA1_Channel5;
+    hdma_usart2_rx.Init.Request = DMA_REQUEST_4;
+    hdma_usart2_rx.Init.Direction = DMA_PERIPH_TO_MEMORY;
+    hdma_usart2_rx.Init.PeriphInc = DMA_PINC_DISABLE;
+    hdma_usart2_rx.Init.MemInc = DMA_MINC_ENABLE;
+    hdma_usart2_rx.Init.PeriphDataAlignment = DMA_PDATAALIGN_BYTE;
+    hdma_usart2_rx.Init.MemDataAlignment = DMA_MDATAALIGN_BYTE;
+    hdma_usart2_rx.Init.Mode = DMA_CIRCULAR;
+    hdma_usart2_rx.Init.Priority = DMA_PRIORITY_LOW;
+    if (HAL_DMA_Init(&hdma_usart2_rx) != HAL_OK)
+    {
+        Error_Handler();
+    }
+
+     __HAL_LINKDMA(&huart2,hdmarx,hdma_usart2_rx);
 
   /* USER CODE BEGIN USART2_MspInit 1 */
 

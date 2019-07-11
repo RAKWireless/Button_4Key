@@ -125,8 +125,8 @@ int main(void)
   RtcInit();
 
 
-  TimerInit(&Test_timer,Test_time_callback);
-  TimerSetValue(&Test_timer,2000);
+//  TimerInit(&Test_timer,Test_time_callback);
+//  TimerSetValue(&Test_timer,2000);
 //  TimerStart(&Test_timer);
 
   RadioEvents.TxDone = OnTxDone;
@@ -143,7 +143,7 @@ int main(void)
                                      LORA_SPREADING_FACTOR, LORA_CODINGRATE,
                                      LORA_PREAMBLE_LENGTH, LORA_FIX_LENGTH_PAYLOAD_ON,
                                      true, 0, 0, LORA_IQ_INVERSION_ON, 3000 );
-  Radio.SetRxConfig( MODEM_LORA, LORA_BANDWIDTH, LORA_SPREADING_FACTOR,
+  w( MODEM_LORA, LORA_BANDWIDTH, LORA_SPREADING_FACTOR,
                                     LORA_CODINGRATE, 0, LORA_PREAMBLE_LENGTH,
                                     LORA_SYMBOL_TIMEOUT, LORA_FIX_LENGTH_PAYLOAD_ON,
                                     0, true, 0, 0, LORA_IQ_INVERSION_ON, true );
@@ -155,22 +155,22 @@ int main(void)
 //  Delay(5);
 
 
-//	  switch( State )
-//	  {
-//	  	  case RX:
-//	  		Radio.Rx( 0 );
-//	  		State = LOWPOWER;
-//	  		break;
-//	  	  case LOWPOWER:
-//	  		break;
-//	  	  default:
-//	  	    break;
-//
-//	  }
+	  switch( State )
+	  {
+	  	  case RX:
+	  		Radio.Rx( 0 );
+	  		State = LOWPOWER;
+	  		break;
+	  	  case LOWPOWER:
+	  		break;
+	  	  default:
+	  	    break;
+
+	  }
 
 
 
-     }
+    }
   /* USER CODE END 3 */
 }
 

@@ -900,7 +900,7 @@ void RadioStandby( void )
 void RadioRx( uint32_t timeout )
 {
 	 SX126xSetDioIrqParams(    IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
-			 	 	 	 	 	IRQ_RADIO_ALL ,
+			                   IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
 	                           IRQ_RADIO_NONE,
 	                           IRQ_RADIO_NONE );
 
