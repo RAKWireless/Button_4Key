@@ -899,14 +899,15 @@ void RadioStandby( void )
 
 void RadioRx( uint32_t timeout )
 {
-    SX126xSetDioIrqParams( IRQ_RADIO_ALL, //IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
-                           IRQ_RADIO_ALL, //IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
-                           IRQ_RADIO_NONE,
-                           IRQ_RADIO_NONE );
+	 SX126xSetDioIrqParams(    IRQ_RX_DONE | IRQ_RX_TX_TIMEOUT,
+			 	 	 	 	 	IRQ_RADIO_ALL ,
+	                           IRQ_RADIO_NONE,
+	                           IRQ_RADIO_NONE );
+
 
     if( timeout != 0 )
     {
-    	printf("timeout %d\r\n", timeout);
+
         TimerSetValue( &RxTimeoutTimer, timeout );
         TimerStart( &RxTimeoutTimer );
     }
@@ -919,6 +920,7 @@ void RadioRx( uint32_t timeout )
     {
         SX126xSetRx( RxTimeout << 6 );
     }
+
 }
 
 void RadioRxBoosted( uint32_t timeout )
@@ -1076,6 +1078,8 @@ void RadioIrqProcess( void )
         BoardEnableIrq( );
 
         uint16_t irqRegs = SX126xGetIrqStatus( );
+
+
         SX126xClearIrqStatus( IRQ_RADIO_ALL );
 
         if( ( irqRegs & IRQ_TX_DONE ) == IRQ_TX_DONE )

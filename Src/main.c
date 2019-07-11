@@ -39,13 +39,13 @@ int8_t SnrValue = 0;
 
 
 #define RX_TIMEOUT_VALUE                            1000
-#define BUFFER_SIZE                                 12 // Define the payload size here
+#define BUFFER_SIZE                                 64 // Define the payload size here
 
 const uint8_t PingMsg[] = "PING";
 const uint8_t PongMsg[] = "PONG";
 
 uint16_t BufferSize = BUFFER_SIZE;
-uint8_t Buffer[BUFFER_SIZE]={0,1,2,3,4,5,0,0,0,0,0};
+uint8_t Buffer[BUFFER_SIZE]={};
 
 #define LORA_BANDWIDTH                              0         // [0: 125 kHz,
                                                               //  1: 250 kHz,
@@ -95,9 +95,21 @@ void Test_time_callback()
 
 static RadioEvents_t RadioEvents;
 
-int main(void)
+typedef enum
 {
-  bool isMaster = false;
+    LOWPOWER,
+    RX,
+    RX_TIMEOUT,
+    RX_ERROR,
+    TX,
+    TX_TIMEOUT,
+}States_t;
+
+volatile States_t State = RX;
+
+int main(void)
+ {
+
   HAL_Init();
   SystemClock_Config();
 
@@ -106,10 +118,10 @@ int main(void)
   MX_USART2_UART_Init();
   MX_SPI1_Init();
 
-  unsigned char temp=0;
+
   SX126xIoInit();
 
-  SX126xReset();
+  //SX126xReset();
   RtcInit();
 
 
@@ -135,31 +147,30 @@ int main(void)
                                     LORA_CODINGRATE, 0, LORA_PREAMBLE_LENGTH,
                                     LORA_SYMBOL_TIMEOUT, LORA_FIX_LENGTH_PAYLOAD_ON,
                                     0, true, 0, 0, LORA_IQ_INVERSION_ON, true );
- if(isMaster!=true)
- {
-	 //Radio.Rx(5000);
- }
+  DelayMs( 1 );
+
   while(1)
   {
-	  if(isMaster==true)
-	  {
-		  Radio.Send( Buffer, BufferSize );
+//  Radio.Send( PingMsg, 4 );
+//  Delay(5);
+
+
+//	  switch( State )
+//	  {
+//	  	  case RX:
+//	  		Radio.Rx( 0 );
+//	  		State = LOWPOWER;
+//	  		break;
+//	  	  case LOWPOWER:
+//	  		break;
+//	  	  default:
+//	  	    break;
+//
+//	  }
 
 
 
-	  //LED_Cycle();
-	  printf("RAK	\r\n");
-	  HAL_Delay(3000);
-	  }
-	  HAL_Delay(1000);
-
-
-	  //temp=SX126xReadRegister(REG_RX_GAIN);
-
-    /* USER CODE END WHILE */
-
-    /* USER CODE BEGIN 3 */
-  }
+     }
   /* USER CODE END 3 */
 }
 
@@ -231,12 +242,15 @@ void OnRxDone( uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr )
     Radio.Sleep( );
     BufferSize = size;
     memcpy( Buffer, payload, BufferSize );
+    Buffer[size]=0;
+    printf("payload	%s\r\n",Buffer);
     RssiValue = rssi;
     SnrValue = snr;
 
 
     printf("OnRxDone\r\n");
     printf("RssiValue=%d dBm, SnrValue=%d\r\n", rssi, snr);
+    State = RX;
 
 }
 
@@ -253,7 +267,8 @@ void OnRxTimeout( void )
     Radio.Sleep( );
 
     printf("OnRxTimeout\r\n");
-    Radio.Rx(5000);
+    State = RX;
+
 }
 
 void OnRxError( void )
