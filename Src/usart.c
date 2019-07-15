@@ -26,7 +26,7 @@
 
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
-uint8_t* Receive_buff[255];
+uint8_t Receive_buff[255];
 /* USART2 init function */
 
 void MX_USART2_UART_Init(void)
@@ -61,7 +61,7 @@ void MX_USART2_UART_Init(void)
 
 
   __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
-  HAL_UART_Receive_DMA(&huart2, (uint8_t*)Receive_buff, 255);
+  HAL_UART_Receive_DMA(&huart2, Receive_buff, 255);
 
 
 }

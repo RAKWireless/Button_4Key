@@ -115,7 +115,7 @@ void SX126xCheckDeviceReady( void )
         SX126xWakeup( );
         //printf("%s	%d\r\n",__FILE__,__LINE__);
         // Switch is turned off when device is in sleep mode and turned on is all other modes
-        SX126xAntSwOn( );
+        //SX126xAntSwOn( );
     }
     SX126xWaitOnBusy( );
 }
@@ -222,7 +222,7 @@ uint32_t SX126xGetRandom( void )
 
 void SX126xSetSleep( SleepParams_t sleepConfig )
 {
-    SX126xAntSwOff( );
+    //SX126xAntSwOff( );
 
     SX126xWriteCommand( RADIO_SET_SLEEP, &sleepConfig.Value, 1 );
     OperatingMode = MODE_SLEEP;

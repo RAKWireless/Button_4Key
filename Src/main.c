@@ -56,7 +56,7 @@ uint8_t Buffer[BUFFER_SIZE]={};
                                                               //  2: 4/6,
                                                               //  3: 4/7,
                                                               //  4: 4/8]
-#define LORA_SYMBOL_TIMEOUT                         5         // Symbols
+#define LORA_SYMBOL_TIMEOUT                         0         // Symbols
 #define LORA_PREAMBLE_LENGTH                        8         // Same for Tx and Rx
 #define LORA_FIX_LENGTH_PAYLOAD_ON                  false
 #define LORA_IQ_INVERSION_ON                        false
@@ -152,7 +152,8 @@ int main(void)
   while(1)
   {
 //  Radio.Send( PingMsg, 4 );
-//  Delay(5);
+  Delay(1);
+
 
 
 	  switch( State )

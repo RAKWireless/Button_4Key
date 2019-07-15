@@ -71,7 +71,7 @@
 //
 //#define RADIO_DIO_0                                 PA_10
 //#define RADIO_DIO_1                                 PB_3
-//#define RADIO_DIO_2                                 PB_5
+#define RADIO_DIO_2                                	  PB_5
 //#define RADIO_DIO_3                                 PB_4
 //#define RADIO_DIO_4                                 PA_9
 //#define RADIO_DIO_5                                 PC_7

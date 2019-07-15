@@ -28,7 +28,7 @@
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
 extern DMA_HandleTypeDef hdma_usart2_rx;
-extern uint8_t* Receive_buff[255];
+extern uint8_t Receive_buff[255];
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
 
@@ -138,10 +138,9 @@ void SysTick_Handler(void)
 
 void USAR_UART_IDLECallback(UART_HandleTypeDef *huart)
 {
-    HAL_UART_DMAStop(&huart2);                                                     //停止本次DMA传输
-
-    uint8_t data_length  = USART_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);   //计算接收到的数据长度
-    Receive_buff[data_length]=0;
+   HAL_UART_DMAStop(&huart2);                                                     //停止本次DMA传输
+   uint8_t data_length  = USART_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);   //计算接收到的数据长度
+   Receive_buff[data_length]=0;
 
     printf("Receive Data(length = %d): %s",data_length,(char*)Receive_buff);
 
@@ -150,7 +149,7 @@ void USAR_UART_IDLECallback(UART_HandleTypeDef *huart)
 
     memset(Receive_buff,0,data_length);                                            //清零接收缓冲区
     data_length = 0;
-    HAL_UART_Receive_DMA(&huart2, (uint8_t*)Receive_buff, 255);                    //重启开始DMA传输 每次255字节数据
+    HAL_UART_Receive_DMA(&huart2, Receive_buff, 255);                    //重启开始DMA传输 每次255字节数据
 }
 
 void USER_UART_IRQHandler(UART_HandleTypeDef *huart)
