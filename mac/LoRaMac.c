@@ -2058,6 +2058,7 @@ static LoRaMacStatus_t ScheduleTx( bool allowDelayedTx )
     }
 
     // Try to send now
+    printf("Channel	%d\r\n",Channel);
     return SendFrameOnChannel( Channel );
 }
 

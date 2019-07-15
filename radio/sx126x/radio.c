@@ -1089,6 +1089,7 @@ void RadioIrqProcess( void )
             TimerStop( &TxTimeoutTimer );
             if( ( RadioEvents != NULL ) && ( RadioEvents->TxDone != NULL ) )
             {
+            	printf("RadioEvents->TxDone( )\r\n");
                 RadioEvents->TxDone( );
             }
         }
@@ -1137,6 +1138,7 @@ void RadioIrqProcess( void )
                 TimerStop( &RxTimeoutTimer );
                 if( ( RadioEvents != NULL ) && ( RadioEvents->RxTimeout != NULL ) )
                 {
+                	printf("RadioEvents->RxTimeout( )\r\n");
                     RadioEvents->RxTimeout( );
                 }
             }
