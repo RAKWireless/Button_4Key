@@ -881,6 +881,7 @@ void RadioSend( uint8_t *buffer, uint8_t size )
     SX126xSendPayload( buffer, size, 0 );
     TimerSetValue( &TxTimeoutTimer, TxTimeout );
     TimerStart( &TxTimeoutTimer );
+
 }
 
 void RadioSleep( void )
@@ -1091,6 +1092,7 @@ void RadioIrqProcess( void )
             {
             	printf("RadioEvents->TxDone( )\r\n");
                 RadioEvents->TxDone( );
+
             }
         }
 

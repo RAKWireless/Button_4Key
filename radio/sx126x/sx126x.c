@@ -99,7 +99,7 @@ void SX126xInit( DioIrqHandler dioIrq )
     SX126xCalibrate( calibParam );
 #endif
 
-    SX126xSetDio2AsRfSwitchCtrl( true );
+    SX126xSetDio2AsRfSwitchCtrl( false );
     OperatingMode = MODE_STDBY_RC;
 }
 

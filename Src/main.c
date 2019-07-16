@@ -60,7 +60,7 @@
 /*!
  * Default datarate
  */
-#define LORAWAN_DEFAULT_DATARATE                    DR_0
+#define LORAWAN_DEFAULT_DATARATE                    DR_1
 
 /*!
  * LoRaWAN confirmed messages
