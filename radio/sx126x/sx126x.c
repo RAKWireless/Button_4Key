@@ -142,6 +142,7 @@ void SX126xSendPayload( uint8_t *payload, uint8_t size, uint32_t timeout )
 {
     SX126xSetPayload( payload, size );
     SX126xSetTx( timeout );
+    //while(1);
 }
 
 uint8_t SX126xSetSyncWord( uint8_t *syncWord )

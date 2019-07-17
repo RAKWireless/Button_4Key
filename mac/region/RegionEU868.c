@@ -617,7 +617,7 @@ bool RegionEU868TxConfig( TxConfigParams_t* txConfig, int8_t* txPower, TimerTime
 
     // Calculate physical TX power
     phyTxPower = RegionCommonComputeTxPower( txPowerLimited, txConfig->MaxEirp, txConfig->AntennaGain );
-
+    printf("phyTxPower	%d dBm\r\n",phyTxPower);
     // Setup the radio frequency
     Radio.SetChannel( Channels[txConfig->Channel].Frequency );
 
@@ -631,7 +631,7 @@ bool RegionEU868TxConfig( TxConfigParams_t* txConfig, int8_t* txPower, TimerTime
         modem = MODEM_LORA;
         Radio.SetTxConfig( modem, phyTxPower, 0, bandwidth, phyDr, 1, 8, false, true, 0, 0, false, 3000 );
     }
-    printf("Channels[txConfig->Channel].Frequency %d\r\n",Channels[txConfig->Channel].Frequency);
+    //printf("Channels[txConfig->Channel].Frequency %d\r\n",Channels[txConfig->Channel].Frequency);
 
     // Setup maximum payload lenght of the radio driver
     Radio.SetMaxPayloadLength( modem, txConfig->PktLen );

@@ -1206,7 +1206,7 @@ static void OnRadioRxTimeout( void )
         Radio.Sleep( );
     }
 
-    if( RxSlot == RX_SLOT_WIN_1 )
+    if( RxSlot == RX_SLOT_WIN_1 ) //RxSlot哪个窗口
     {
         if( NodeAckRequested == true )
         {
@@ -1223,7 +1223,7 @@ static void OnRadioRxTimeout( void )
             }
         }
     }
-    else
+    else   //RX_SLOT_WIN_2
     {
         if( NodeAckRequested == true )
         {
@@ -1261,13 +1261,14 @@ static void OnMacStateCheckTimerEvent( void )
 
         if( ( LoRaMacFlags.Bits.MlmeReq == 1 ) || ( ( LoRaMacFlags.Bits.McpsReq == 1 ) ) )
         {
-            if( ( McpsConfirm.Status == LORAMAC_EVENT_INFO_STATUS_TX_TIMEOUT ) ||
+            if( ( McpsConfirm.Status == LORAMAC_EVENT_INFO_STATUS_TX_TIMEOUT ) ||   // A Tx timeout occurred
                 ( MlmeConfirm.Status == LORAMAC_EVENT_INFO_STATUS_TX_TIMEOUT ) )
             {
                 // Stop transmit cycle due to tx timeout.
                 LoRaMacState &= ~LORAMAC_TX_RUNNING;
                 MacCommandsBufferIndex = 0;
                 McpsConfirm.NbRetries = AckTimeoutRetriesCounter;
+//                printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
                 McpsConfirm.AckReceived = false;
                 McpsConfirm.TxTimeOnAir = 0;
                 txTimeout = true;
@@ -1282,8 +1283,8 @@ static void OnMacStateCheckTimerEvent( void )
                 {// Procedure for the join request
                     if( MlmeConfirm.Status == LORAMAC_EVENT_INFO_STATUS_OK )
                     {// Node joined successfully
-                        UpLinkCounter = 0;
-                        ChannelsNbRepCounter = 0;
+                        UpLinkCounter = 0;              //上行计数为0
+                        ChannelsNbRepCounter = 0;       // Uplink messages repetitions counter
                     }
                     LoRaMacState &= ~LORAMAC_TX_RUNNING;
                 }
@@ -2058,7 +2059,7 @@ static LoRaMacStatus_t ScheduleTx( bool allowDelayedTx )
     }
 
     // Try to send now
-    printf("Channel	%d\r\n",Channel);
+    //printf("Channel	%d\r\n",Channel);
     return SendFrameOnChannel( Channel );
 }
 
