@@ -24,6 +24,7 @@
 #include "usart.h"
 #include "stdio.h"
 #include "string.h"
+#include "command.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -147,6 +148,8 @@ void USAR_UART_IDLECallback(UART_HandleTypeDef *huart)
     //HAL_UART_Transmit(&huart2,(uint8_t*)Receive_buff,data_length,0x200);                     //测试函数：将接收到的数据打印出去
     printf("\r\n");
 
+    CMD_Process(Receive_buff);
+
     memset(Receive_buff,0,data_length);                                            //清零接收缓冲区
     data_length = 0;
     HAL_UART_Receive_DMA(&huart2, Receive_buff, 255);                    //重启开始DMA传输 每次255字节数据
@@ -176,6 +179,17 @@ void USART2_IRQHandler(void)
     /* USER CODE END USART1_IRQn 1 */
 }
 
+
+void DMA1_Channel4_5_6_7_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel4_5_6_7_IRQn 0 */
+
+  /* USER CODE END DMA1_Channel4_5_6_7_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_usart2_rx);
+  /* USER CODE BEGIN DMA1_Channel4_5_6_7_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel4_5_6_7_IRQn 1 */
+}
 /******************************************************************************/
 /* STM32L0xx Peripheral Interrupt Handlers                                    */
 /* Add here the Interrupt Handlers for the used peripherals.                  */

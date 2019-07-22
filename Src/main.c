@@ -739,9 +739,15 @@ int main(void)
   MX_SPI1_Init();
   SX126xIoInit();
   RtcInit();
-  printf("***********************************************\r\n");
-  printf("*********          Welcome            *********\r\n");
-  printf("***********************************************\r\n");
+  printf("\r\n======================================================================");
+  //printf("\r\n=              (C) COPYRIGHT 2015 STMicroelectronics                 =");
+  //printf("\r\n=                                                                    =");
+  printf("\r\n=              STM32L0xx Button Application  (Version 1.0.0)         =");
+  printf("\r\n=                                                                    =");
+  printf("\r\n=                                              By  RAK Team          =");
+  printf("\r\n======================================================================");
+  printf("\r\n\r\n");
+
 
   LoRaMacPrimitives_t LoRaMacPrimitives;
   LoRaMacCallback_t LoRaMacCallbacks;
@@ -776,9 +782,10 @@ int main(void)
 //	{
 //		DeviceState = DEVICE_STATE_SLEEP;
 //	}
-//  while(1);
+
   while(1)
   {
+	  while(1);
 	  DeviceState = DEVICE_STATE_INIT;
 
 	     while( 1 )
