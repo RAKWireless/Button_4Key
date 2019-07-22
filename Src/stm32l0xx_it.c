@@ -143,11 +143,12 @@ void USAR_UART_IDLECallback(UART_HandleTypeDef *huart)
    uint8_t data_length  = USART_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);   //计算接收到的数据长度
    Receive_buff[data_length]=0;
 
-    printf("Receive Data(length = %d): %s",data_length,(char*)Receive_buff);
+    //printf("Receive Data(length = %d): %s",data_length,(char*)Receive_buff);
 
     //HAL_UART_Transmit(&huart2,(uint8_t*)Receive_buff,data_length,0x200);                     //测试函数：将接收到的数据打印出去
-    printf("\r\n");
+    //printf("\r\n");
 
+    if(data_length!=0)
     CMD_Process(Receive_buff);
 
     memset(Receive_buff,0,data_length);                                            //清零接收缓冲区

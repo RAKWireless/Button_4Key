@@ -9,9 +9,9 @@
 #define COMMAND_H_
 
 void CMD_Process( unsigned char* rxChar);
+static int parse_args(char* str, char* argv[]);
 
-
-
+#define MAX_ARGV 20
 
 
 
