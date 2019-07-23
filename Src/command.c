@@ -8,10 +8,14 @@
 #include "command.h"
 #include "string.h"
 #include "stdio.h"
+#include "stddef.h"
 
 static void Test_Printf(int argc, char *argv[]);
+static void commmon_read_config(int argc, char *argv[]);
+static void commmon_set_config(int argc, char *argv[]);
+static int parse_args(char* str, char* argv[]);
 
-struct cli_cmd {
+struct cli_cmds {
     /** The name of the CLI command */
     const char *name;
     /** The help text associated with the command */
@@ -20,9 +24,13 @@ struct cli_cmd {
     void (*function) (int argc, char *argv[]);
 };
 
-struct cli_cmd cli_cmds[] = {
-                            	"test",	Test_Printf,
-                            };
+struct cli_cmds First_cmds[] =
+{
+		{"test",				Test_Printf},
+		{"get_config",		commmon_read_config},
+		{"set_config",		commmon_set_config},
+
+};
 
 void CMD_Process( unsigned char* rxChar)
 {
@@ -38,25 +46,27 @@ void CMD_Process( unsigned char* rxChar)
 	    printf("[Echo cmd:] %s\r\n", rxChar);
 	    rxChar += 3;
 	    argc = parse_args((char*)rxChar, argv);
+	    printf("(1) argc:%d	argv[0]:%s	argv[1]:%s\r\n",argc,argv[0],argv[1]);
+
 	    if (argc > 0)
 	    {
-	        for (i = 0; i < sizeof(cli_cmds)/sizeof(struct cli_cmd); i++) {
-	            if (strcmp(argv[0], cli_cmds[i].name) == 0) {
-	                cli_cmds[i].function(argc, argv);
+	        for (i = 0; i < sizeof(First_cmds)/sizeof(struct cli_cmds); i++)
+	        {
+	            if (strcmp(argv[0], First_cmds[i].name) == 0)
+	            {
+	            	First_cmds[i].function(argc, argv);
 	                break;
 	            }
 
 	        }
-	        if (i == sizeof(cli_cmds)/sizeof(struct cli_cmd)) {
-	        	 printf("AT ERROR");
+	        if (i == sizeof(First_cmds)/sizeof(struct cli_cmds)) {
+	        	 printf("AT Command ERROR\r\n");
 	        }
 	    }
 	    else
 	    {
 	       printf("AT Command ERROR\r\n");
 	    }
-	    //return 0;
-
 }
 
 
@@ -75,7 +85,7 @@ static int parse_args(char* str, char* argv[])
 	                return 0;
 	            }
 
-	            argv[i-1] = ch;
+	            argv[i-1] = ch;    //È¡²ÎÊý
 
 
 	            while(*ch != ',' && *ch != '\0' && *ch != '\r')
@@ -94,13 +104,14 @@ static int parse_args(char* str, char* argv[])
 	            }
 	            if (*ch == '\r')
 	                break;
-	            if (*ch != '\0')
+	            if (*ch != '\0')   //Îª×Ö·û´®¼ÓÄ©Î²0×Ö·û
 	            {
 	                *ch = '\0';
 	                ch++;
-	                while(*ch == ',') {
-	                    ch++;
-	                }
+//	                while(*ch == ',')
+//	                {
+//	                    ch++;
+//	                }
 	            }
 	        }
 	        return i;
@@ -110,5 +121,37 @@ static int parse_args(char* str, char* argv[])
 static void Test_Printf(int argc, char *argv[])
 {
 	printf("AT Test OK\r\n");
+}
+
+static void commmon_read_config(int argc, char *argv[])
+{
+    int ret;
+    if (argc != 2)
+    {
+        printf("Parameter format error.\r\n");
+        return;
+    }
+
+    ret = read_config(argc,argv);    //ºó°ë½Ø×Ö·û´®´«Èë
+    if (ret < 0)
+    {
+        return;
+    }
+}
+
+static void commmon_set_config(int argc, char *argv[])
+{
+    int ret;
+    if (argc != 2)
+    {
+        printf("Parameter format error.\r\n");
+        return;
+    }
+
+    ret = set_config(argc,argv);    //ºó°ë½Ø×Ö·û´®´«Èë
+    if (ret < 0)
+    {
+        return;
+    }
 }
 
