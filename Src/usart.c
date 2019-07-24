@@ -33,7 +33,7 @@ void MX_USART2_UART_Init(void)
 {
 
  __HAL_RCC_DMA1_CLK_ENABLE();
- HAL_NVIC_SetPriority(DMA1_Channel4_5_6_7_IRQn, 0, 0);
+ HAL_NVIC_SetPriority(DMA1_Channel4_5_6_7_IRQn, 3, 0);
  HAL_NVIC_EnableIRQ(DMA1_Channel4_5_6_7_IRQn);
 
 
@@ -52,7 +52,7 @@ void MX_USART2_UART_Init(void)
     Error_Handler();
   }
 
-  HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(USART2_IRQn, 3, 0);
   HAL_NVIC_EnableIRQ(USART2_IRQn);
 
 

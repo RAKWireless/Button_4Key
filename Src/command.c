@@ -11,10 +11,11 @@
 #include "stddef.h"
 #include "lora_config.h"
 
-static void Test_Printf(int argc, char *argv[]);
+
 static void commmon_read_config(int argc, char *argv[]);
 static void commmon_set_config(int argc, char *argv[]);
 static int parse_args(char* str, char* argv[]);
+
 
 struct cli_cmds {
     /** The name of the CLI command */
@@ -27,7 +28,7 @@ struct cli_cmds {
 
 struct cli_cmds First_cmds[] =
 {
-		{"test",				Test_Printf},
+		{"join",				lora_join},
 		{"get_config",		commmon_read_config},
 		{"set_config",		commmon_set_config},
 
@@ -56,7 +57,7 @@ void CMD_Process( unsigned char* rxChar)
 	        {
 	            if (strcmp(argv[0], First_cmds[i].name) == 0)
 	            {
-	            	printf("(1) argc:%d			argv[0]:%s	argv[1]:%s\r\n",argc,argv[0],argv[1]);   //argc传入一个无意义的值，只是为了函数格式统一
+	            	//printf("(1) argc:%d			argv[0]:%s	argv[1]:%s\r\n",argc,argv[0],argv[1]);   //argc传入一个无意义的值，只是为了函数格式统一
 	            	First_cmds[i].function(argc, argv);
 
 	                break;
@@ -123,10 +124,7 @@ static int parse_args(char* str, char* argv[])
 }
 
 
-static void Test_Printf(int argc, char *argv[])
-{
-	printf("AT Test OK\r\n");
-}
+
 
 static void commmon_read_config(int argc, char *argv[])
 {

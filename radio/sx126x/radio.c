@@ -1063,6 +1063,7 @@ void RadioOnRxTimeoutIrq( void )
     if( ( RadioEvents != NULL ) && ( RadioEvents->RxTimeout != NULL ) )
     {
         RadioEvents->RxTimeout( );
+
     }
 }
 
@@ -1070,6 +1071,8 @@ void RadioOnDioIrq( void )
 {
     IrqFired = true;
     RadioIrqProcess();
+    printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+
 }
 
 void RadioIrqProcess( void )
@@ -1081,7 +1084,7 @@ void RadioIrqProcess( void )
         BoardEnableIrq( );
 
         uint16_t irqRegs = SX126xGetIrqStatus( );
-
+        printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
 
         SX126xClearIrqStatus( IRQ_RADIO_ALL );
 
@@ -1099,7 +1102,7 @@ void RadioIrqProcess( void )
         if( ( irqRegs & IRQ_RX_DONE ) == IRQ_RX_DONE )
         {
             uint8_t size;
-
+            printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
             TimerStop( &RxTimeoutTimer );
             SX126xGetPayload( RadioRxPayload, &size , 255 );
             SX126xGetPacketStatus( &RadioPktStatus );

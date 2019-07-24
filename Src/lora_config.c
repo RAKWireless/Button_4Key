@@ -8,6 +8,9 @@
 #include "stddef.h"
 #include "stdio.h"
 #include "string.h"
+#include "main.h"
+#include "eeprom.h"
+#include "LoRaMac.h"
 
 typedef enum {
   CFG_READ,
@@ -18,11 +21,19 @@ typedef enum {
 lora_config_t lora_config;
 
 
+
+
 //static int handle_lora_config(lora_config_t *config, int argc, char *argv[], char *in);
 static int analysis_second_string(int argc , char * argv[],cfg_op op);
 static int handle_device_config(int argc , char * argv[],cfg_op op);
 static int handle_lora_config(int argc , char * argv[],cfg_op op);
 static int parse2_args(char* str, char* argv[]);
+
+
+static void McpsConfirm( McpsConfirm_t *mcpsConfirm );
+static void McpsIndication( McpsIndication_t *mcpsIndication );
+static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm );
+static void MlmeIndication( MlmeIndication_t *mlmeIndication );
 
 
 static int dev_eui(int argc , char * argv[],cfg_op op);
@@ -227,6 +238,129 @@ static int dev_eui(int argc , char * argv[],cfg_op op)
 
 
 
+
+
+void InitLora()
+{
+	  	LoRaMacPrimitives_t LoRaMacPrimitives;
+	  	LoRaMacCallback_t LoRaMacCallbacks;
+	  	MibRequestConfirm_t mibReq;
+
+
+	  	LoRaMacPrimitives.MacMcpsConfirm = McpsConfirm;
+	  	LoRaMacPrimitives.MacMcpsIndication = McpsIndication;
+	  	LoRaMacPrimitives.MacMlmeConfirm = MlmeConfirm;
+	  	LoRaMacPrimitives.MacMlmeIndication = MlmeIndication;
+	  //LoRaMacCallbacks.GetBatteryLevel = BoardGetBatteryLevel;
+	  	LoRaMacInitialization( &LoRaMacPrimitives, &LoRaMacCallbacks, LORAMAC_REGION_EU868 );
+
+		mibReq.Type = MIB_ADR;
+		mibReq.Param.AdrEnable = true;
+		LoRaMacMibSetRequestConfirm( &mibReq );
+
+		mibReq.Type = MIB_PUBLIC_NETWORK;
+		mibReq.Param.EnablePublicNetwork = true;
+		LoRaMacMibSetRequestConfirm( &mibReq );
+}
+
+/*!
+ * \brief   MLME-Indication event function
+ *
+ * \param   [IN] mlmeIndication - Pointer to the indication structure.
+ */
+static void MlmeIndication( MlmeIndication_t *mlmeIndication )
+{
+
+}
+
+static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
+{
+	switch( mlmeConfirm->MlmeRequest )
+	    {
+	        case MLME_JOIN:
+	        {
+	            if( mlmeConfirm->Status == LORAMAC_EVENT_INFO_STATUS_OK )
+	            {
+	                // Status is OK, node has joined the network
+	            	printf("Status is OK, node has joined the network\r\n");
+
+	            }
+	            else
+	            {
+	            	printf("Join was not successful. Try to join again\r\n");
+	                // Join was not successful. Try to join again
+//	                MlmeReq_t mlmeReq;
+//	                mlmeReq.Type = MLME_JOIN;
+//	                mlmeReq.Req.Join.DevEui = DevEui;
+//	                mlmeReq.Req.Join.AppEui = AppEui;
+//	                mlmeReq.Req.Join.AppKey = AppKey;
+//	                mlmeReq.Req.Join.Datarate = LORAWAN_DEFAULT_DATARATE;
+//
+//	                if( LoRaMacMlmeRequest( &mlmeReq ) == LORAMAC_STATUS_OK )
+//	                {
+//	                    DeviceState = DEVICE_STATE_SLEEP;
+//	                    printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+//	                }
+//	                else
+//	                {
+//	                    DeviceState = DEVICE_STATE_CYCLE;
+//	                    printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+//	                }
+//	            }
+//	            break;
+	        }
+	        }
+	    }
+}
+
+static void McpsIndication( McpsIndication_t *mcpsIndication )
+{
+
+}
+
+static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
+{
+
+}
+
+
+
+
+void lora_join(int argc, char *argv[])
+{
+ unsigned char i=0;
+ unsigned char temp_dev_eui[]={ 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xA1 };
+ unsigned char temp_app_eui[]={0x70, 0xB3, 0xD5, 0x7E, 0xD0, 0x01, 0xA2, 0xA1 };
+ unsigned char temp_app_key[]={0x5A, 0x0C, 0xA2, 0xF8, 0xC9, 0xB8, 0xE4, 0x55, 0x33, 0x43, 0x5F, 0xC2, 0xA1, 0x3B, 0xA0, 0x73};
+
+ for(i=0;i<8;i++)
+ {
+	 lora_config.dev_eui[i]=temp_dev_eui[i];
+	 lora_config.app_eui[i]=temp_app_eui[i];
+ }
+
+ for(i=0;i<16;i++)
+  {
+ 	 lora_config.app_key[i]=temp_app_key[i];
+
+  }
+
+
+ MlmeReq_t mlmeReq;	                // Initialize LoRaMac device unique ID
+ //BoardGetUniqueId( DevEui );
+ mlmeReq.Type = MLME_JOIN;
+
+ mlmeReq.Req.Join.DevEui = lora_config.dev_eui;
+ mlmeReq.Req.Join.AppEui = lora_config.app_eui;
+ mlmeReq.Req.Join.AppKey = lora_config.app_key;
+ mlmeReq.Req.Join.Datarate = DR_1;
+ LoRaMacStatus_t state;
+ state = LoRaMacMlmeRequest( &mlmeReq );
+if( state!= LORAMAC_STATUS_OK )
+{
+	printf("LoRaMacMlmeRequest( &mlmeReq ) != LORAMAC_STATUS_OK  %d\r\n",state);
+}
+}
 
 
 

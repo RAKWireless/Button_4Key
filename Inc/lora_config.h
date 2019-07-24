@@ -8,6 +8,7 @@
 #ifndef LORA_CONFIG_H_
 #define LORA_CONFIG_H_
 #include "stdint.h"
+#define FLASH_USER_START_ADDR   0x8080000
 
 typedef struct
 {
@@ -19,6 +20,13 @@ typedef struct
 
 int read_config(int argc , char * argv[]);
 int set_config(int argc , char * argv[]);
+
+void InitLora(void);
+void lora_join(int argc, char *argv[]);
+
+
+
+
 
 extern lora_config_t lora_config;
 
