@@ -29,7 +29,22 @@
 #include "gpio-ioe.h"
 #endif
 
+extern void Key1_Fall(void);
+extern void Key2_Fall(void);
+extern void Key3_Fall(void);
+extern void Key4_Fall(void);
+
 static GpioIrqHandler *GpioIrq[16];
+
+void KeyCallbackInit()
+{
+	//printf("KeyCallbackInit\r\n");
+	GpioIrq[9 ]=Key1_Fall;
+	GpioIrq[10]=Key2_Fall;
+	GpioIrq[6 ]=Key3_Fall;
+	GpioIrq[7 ]=Key4_Fall;
+}
+
 
 void GpioMcuInit( Gpio_t *obj, PinNames pin, PinModes mode, PinConfigs config, PinTypes type, uint32_t value )
 {
@@ -357,7 +372,7 @@ void HAL_GPIO_EXTI_Callback( uint16_t gpioPin )
             callbackIndex++;
         }
     }
-
+    //printf("callbackIndex	%d\r\n",callbackIndex);
     if( GpioIrq[callbackIndex] != NULL )
     {
     	GpioIrq[callbackIndex]( );

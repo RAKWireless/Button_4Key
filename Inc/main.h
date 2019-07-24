@@ -37,7 +37,10 @@ void SystemClock_Config(void);
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
-
+#define KEY1	GPIO_PIN_9
+#define KEY2	GPIO_PIN_10
+#define KEY3	GPIO_PIN_6
+#define KEY4	GPIO_PIN_7
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

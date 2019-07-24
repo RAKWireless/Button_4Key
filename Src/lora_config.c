@@ -7,6 +7,7 @@
 #include "lora_config.h"
 #include "stddef.h"
 #include "stdio.h"
+#include "string.h"
 
 typedef enum {
   CFG_READ,
@@ -16,15 +17,15 @@ typedef enum {
 #define MAX_ARGV 20
 lora_config_t lora_config;
 
-static void Test_Printf(int argc, char *argv[],cfg_op op);
+
 //static int handle_lora_config(lora_config_t *config, int argc, char *argv[], char *in);
 static int analysis_second_string(int argc , char * argv[],cfg_op op);
 static int handle_device_config(int argc , char * argv[],cfg_op op);
 static int handle_lora_config(int argc , char * argv[],cfg_op op);
 static int parse2_args(char* str, char* argv[]);
-int read_config(int argc , char * argv[]);
-int set_config(int argc , char * argv[]);
 
+
+static int dev_eui(int argc , char * argv[],cfg_op op);
 
 struct config_cmd
 {
@@ -36,18 +37,10 @@ struct config_cmd last_cmd_str[]=
 {
 
 
-//    "channel",channel,
-//    "status",status,
-//    "region",region,
-//     "dev_eui",dev_eui,
-//    "app_eui",app_eui,
-//    "app_key",app_key,
-//    "dev_addr",dev_addr,
-//    "apps_key",apps_key,
-//    "nwks_key",nwks_key,
-//    "join_mode",join_mode,
-//    "work_mode",work_mode,
-	{ "test",Test_Printf,}
+
+		{"dev_eui",dev_eui},
+
+
 
 };
 
@@ -63,16 +56,16 @@ struct device_cfgt
 
 struct device_cfgt device_cfg[] =
 {
-    "device",                handle_device_config,
-    "lora",                  handle_lora_config,
+		{"device",                handle_device_config},
+		{"lora",                  handle_lora_config},
 };
 
 int read_config(int argc , char * argv[])
 {
 		int ret;
-		cfg_op CFG_READ;
+		//cfg_op CFG_READ;
 
-	    ret = analysis_second_string(argc ,argv,CFG_READ);
+	    ret = analysis_second_string(argc ,argv, CFG_READ);
 
 
 	    if (ret < 0)
@@ -85,7 +78,7 @@ int read_config(int argc , char * argv[])
 int set_config(int argc , char * argv[])
 {
 		int ret;
-		cfg_op CFG_WRITE;
+		//cfg_op CFG_WRITE;
 	    ret = analysis_second_string(argc ,argv,CFG_WRITE);
 
 	    if (ret < 0)
@@ -139,7 +132,7 @@ static int analysis_second_string(int argc , char * argv[],cfg_op op)    //ºó°ë½
     //printf("FUNC %s	  argv[1]	%s\r\n",__func__,argv[1]);
 
         argc = parse2_args(str, argv_temp);    //
-        printf("(2) argc:%d	 argv[0]:%s		argv[1]:%s\r\n",argc,argv_temp[0],argv_temp[1]);
+        printf("(2) argc:%d			argv[0]:%s		argv[1]:%s\r\n",argc,argv_temp[0],argv_temp[1]);
         if (argc > 2) {
             printf("Too many parameters.\n");
             return -1;
@@ -176,34 +169,61 @@ static int analysis_second_string(int argc , char * argv[],cfg_op op)    //ºó°ë½
 static int handle_lora_config(int argc , char * argv[],cfg_op op)
 {
 	printf("handle_lora_config\r\n");
-
+	return 0;
 }
 
 
 static int handle_device_config(int argc , char * argv[],cfg_op op)
 {
 	    int i;
-
+	    int ret;
 
 	    char *argv_temp[MAX_ARGV];
 
 	    //printf("str 	%s\r\n",argv[1]);
 
-	    printf("handle_device_config\r\n");
+	    //printf("handle_device_config\r\n");
 	    argc = parse2_args(argv[1],argv_temp);    //
-	    printf("(3) argc:%d	 argv[0]:%s		argv[1]:%s\r\n",argc,argv_temp[0],argv_temp[1]);
+	    printf("(3) argc:%d			argv[0]:%s		argv[1]:%s\r\n",argc,argv_temp[0],argv_temp[1]);
+	    if (argc > 2)
+	    {
+	                printf("Too many parameters.\n");
+	                return -1;
+	    }else if(argc < 2)
+	    {
+	                printf("Too few parameters.\n");
+	                return -1;
+	    }
+	    for (i = 0; i < sizeof(last_cmd_str)/sizeof(struct config_cmd); i++)
+	          {
+	              if (strcmp(argv_temp[0], last_cmd_str[i].name) == 0)
+	              {
+	                  ret = last_cmd_str[i].function(argc,argv_temp,op);
+	                  if (ret < 0)
+	                  {
+	                      printf("AT CMD parameters error.\n");
+	                      return ret;
+	                  }
+	                  break;
+	              }
+	          }
+	          if (i == sizeof(last_cmd_str)/sizeof(struct config_cmd))
+	          {
+	              printf("AT CMD not found.\n");
+	              return -1;
+	          }
+	   return 0;
 
 
 }
 
-static void Test_Printf(int argc, char *argv[],cfg_op op)
+
+
+static int dev_eui(int argc , char * argv[],cfg_op op)
 {
-	printf("Test_Printf");
-
+	//printf("dev_eui(int argc , char * argv[],cfg_op op)\r\n");
+	return 0;
 }
-
-
-
 
 
 

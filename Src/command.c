@@ -9,6 +9,7 @@
 #include "string.h"
 #include "stdio.h"
 #include "stddef.h"
+#include "lora_config.h"
 
 static void Test_Printf(int argc, char *argv[]);
 static void commmon_read_config(int argc, char *argv[]);
@@ -46,7 +47,8 @@ void CMD_Process( unsigned char* rxChar)
 	    printf("[Echo cmd:] %s\r\n", rxChar);
 	    rxChar += 3;
 	    argc = parse_args((char*)rxChar, argv);
-	    printf("(1) argc:%d	argv[0]:%s	argv[1]:%s\r\n",argc,argv[0],argv[1]);
+	    //printf("(1) argc:%d	argv[0]:%s	argv[1]:%s\r\n",argc,argv[0],argv[1]);
+
 
 	    if (argc > 0)
 	    {
@@ -54,7 +56,9 @@ void CMD_Process( unsigned char* rxChar)
 	        {
 	            if (strcmp(argv[0], First_cmds[i].name) == 0)
 	            {
+	            	printf("(1) argc:%d			argv[0]:%s	argv[1]:%s\r\n",argc,argv[0],argv[1]);   //argc传入一个无意义的值，只是为了函数格式统一
 	            	First_cmds[i].function(argc, argv);
+
 	                break;
 	            }
 
@@ -67,6 +71,7 @@ void CMD_Process( unsigned char* rxChar)
 	    {
 	       printf("AT Command ERROR\r\n");
 	    }
+
 }
 
 

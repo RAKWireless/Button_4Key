@@ -41,11 +41,54 @@ void MX_GPIO_Init(void)
 {
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
+	  GPIO_InitTypeDef GPIO_InitStruct = {0};
+
+	  /* GPIO Ports Clock Enable */
+	  __HAL_RCC_GPIOA_CLK_ENABLE();
+	  __HAL_RCC_GPIOB_CLK_ENABLE();
+
+	  /*Configure GPIO pin : PA9 */
+	  GPIO_InitStruct.Pin = GPIO_PIN_9;
+	  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+	  GPIO_InitStruct.Pull = GPIO_NOPULL;
+	  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	  /*Configure GPIO pin : PA10 */
+	  GPIO_InitStruct.Pin = GPIO_PIN_10;
+	  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+	  GPIO_InitStruct.Pull = GPIO_NOPULL;
+	  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+	  /*Configure GPIO pins : PB6 PB7 */
+	  GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
+	  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+	  GPIO_InitStruct.Pull = GPIO_NOPULL;
+	  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+	  HAL_NVIC_SetPriority(EXTI4_15_IRQn, 0, 0);
+	  HAL_NVIC_EnableIRQ(EXTI4_15_IRQn);
 
 }
 
 /* USER CODE BEGIN 2 */
+void Key1_Fall()
+{
+	printf("KEY1 Fall\r\n");
+}
+
+void Key2_Fall()
+{
+	printf("KEY2 Fall\r\n");
+}
+void Key3_Fall()
+{
+	printf("KEY3 Fall\r\n");
+}
+void Key4_Fall()
+{
+	printf("KEY4 Fall\r\n");
+}
+
 
 /* USER CODE END 2 */
 
