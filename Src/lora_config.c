@@ -356,7 +356,7 @@ void lora_join(int argc, char *argv[])
  state = LoRaMacMlmeRequest( &mlmeReq );
 if( state!= LORAMAC_STATUS_OK )
 {
-	printf("LoRaMacMlmeRequest( &mlmeReq ) != LORAMAC_STATUS_OK  %d\r\n",state);
+	printf("+MEMSREQ:%d\r\nERROR\r\n",state);
 }
 }
 
@@ -372,7 +372,7 @@ void lora_send(int port,const unsigned char* Appdata)
 	state =LoRaMacMcpsRequest( &mcpsReq ) ;
 	if( state!= LORAMAC_STATUS_OK )
 	{
-		printf("LoRaMacMlmeRequest( &mlmeReq ) != LORAMAC_STATUS_OK  %d\r\n",state);
+		printf("+MCPSREQ:%d\r\nERROR\r\n",state);
 	}
 
 }

@@ -215,7 +215,7 @@ void TimerIrqHandler( void )
     // Early out when TimerListHead is null to prevent null pointer
     if ( TimerListHead == NULL )
     {
-    	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+    	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
         return;
     }
 
