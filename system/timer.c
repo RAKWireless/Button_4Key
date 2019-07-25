@@ -215,6 +215,7 @@ void TimerIrqHandler( void )
     // Early out when TimerListHead is null to prevent null pointer
     if ( TimerListHead == NULL )
     {
+    	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
         return;
     }
 
@@ -238,7 +239,11 @@ void TimerIrqHandler( void )
 
         if( elapsedTimer->Callback != NULL )
         {
+//        	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+
             elapsedTimer->Callback( );
+//            printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+
         }
     }
 
@@ -247,6 +252,7 @@ void TimerIrqHandler( void )
     {
         if( TimerListHead->IsRunning != true )
         {
+//        	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
             TimerListHead->IsRunning = true;
             TimerSetTimeout( TimerListHead );
         }

@@ -24,7 +24,7 @@ int set_config(int argc , char * argv[]);
 void InitLora(void);
 void lora_join(int argc, char *argv[]);
 
-
+void lora_send(int port,const unsigned char* Appdata);
 
 
 

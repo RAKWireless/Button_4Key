@@ -19,6 +19,8 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gpio.h"
+#include "stdio.h"
+#include "lora_config.h"
 /* USER CODE BEGIN 0 */
 
 /* USER CODE END 0 */
@@ -74,19 +76,30 @@ void MX_GPIO_Init(void)
 void Key1_Fall()
 {
 	printf("KEY1 Fall\r\n");
+	unsigned char str[1]={0x01};
+	lora_send(1,str);
+
 }
 
 void Key2_Fall()
 {
 	printf("KEY2 Fall\r\n");
+	unsigned char str[1]={0x02};
+	lora_send(2,str);
 }
 void Key3_Fall()
 {
+
 	printf("KEY3 Fall\r\n");
+	unsigned char str[1]={0x03};
+	lora_send(3,str);
 }
 void Key4_Fall()
 {
+
 	printf("KEY4 Fall\r\n");
+	unsigned char str[1]={0x04};
+	lora_send(4,str);
 }
 
 

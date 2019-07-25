@@ -1398,13 +1398,16 @@ static void OnMacStateCheckTimerEvent( void )
         if( LoRaMacFlags.Bits.McpsReq == 1 )
         {
             LoRaMacFlags.Bits.McpsReq = 0;
+//            printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
             LoRaMacPrimitives->MacMcpsConfirm( &McpsConfirm );
         }
 
         if( LoRaMacFlags.Bits.MlmeReq == 1 )
         {
             LoRaMacFlags.Bits.MlmeReq = 0;
+//            printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
             LoRaMacPrimitives->MacMlmeConfirm( &MlmeConfirm );
+//            printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
         }
 
         // Verify if sticky MAC commands are pending or not

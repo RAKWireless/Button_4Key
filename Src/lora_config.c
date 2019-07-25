@@ -20,7 +20,11 @@ typedef enum {
 #define MAX_ARGV 20
 lora_config_t lora_config;
 
-
+LoRaMacPrimitives_t LoRaMacPrimitives;
+LoRaMacCallback_t LoRaMacCallbacks;
+MibRequestConfirm_t mibReq;
+MlmeReq_t mlmeReq;
+McpsReq_t mcpsReq;
 
 
 //static int handle_lora_config(lora_config_t *config, int argc, char *argv[], char *in);
@@ -242,9 +246,7 @@ static int dev_eui(int argc , char * argv[],cfg_op op)
 
 void InitLora()
 {
-	  	LoRaMacPrimitives_t LoRaMacPrimitives;
-	  	LoRaMacCallback_t LoRaMacCallbacks;
-	  	MibRequestConfirm_t mibReq;
+
 
 
 	  	LoRaMacPrimitives.MacMcpsConfirm = McpsConfirm;
@@ -254,13 +256,7 @@ void InitLora()
 	  //LoRaMacCallbacks.GetBatteryLevel = BoardGetBatteryLevel;
 	  	LoRaMacInitialization( &LoRaMacPrimitives, &LoRaMacCallbacks, LORAMAC_REGION_EU868 );
 
-		mibReq.Type = MIB_ADR;
-		mibReq.Param.AdrEnable = true;
-		LoRaMacMibSetRequestConfirm( &mibReq );
 
-		mibReq.Type = MIB_PUBLIC_NETWORK;
-		mibReq.Param.EnablePublicNetwork = true;
-		LoRaMacMibSetRequestConfirm( &mibReq );
 }
 
 /*!
@@ -270,11 +266,12 @@ void InitLora()
  */
 static void MlmeIndication( MlmeIndication_t *mlmeIndication )
 {
-
+	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
 }
 
 static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
 {
+
 	switch( mlmeConfirm->MlmeRequest )
 	    {
 	        case MLME_JOIN:
@@ -306,15 +303,16 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
 //	                    DeviceState = DEVICE_STATE_CYCLE;
 //	                    printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
 //	                }
-//	            }
-//	            break;
-	        }
+	            }
+	            break;
+
 	        }
 	    }
 }
 
 static void McpsIndication( McpsIndication_t *mcpsIndication )
 {
+	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
 
 }
 
@@ -346,7 +344,7 @@ void lora_join(int argc, char *argv[])
   }
 
 
- MlmeReq_t mlmeReq;	                // Initialize LoRaMac device unique ID
+ //MlmeReq_t mlmeReq;	                // Initialize LoRaMac device unique ID
  //BoardGetUniqueId( DevEui );
  mlmeReq.Type = MLME_JOIN;
 
@@ -363,6 +361,20 @@ if( state!= LORAMAC_STATUS_OK )
 }
 
 
+void lora_send(int port,const unsigned char* Appdata)
+{
+	mcpsReq.Type = MCPS_CONFIRMED;
+	mcpsReq.Req.Unconfirmed.fPort = port;
+	mcpsReq.Req.Unconfirmed.fBuffer = Appdata;
+	mcpsReq.Req.Unconfirmed.fBufferSize = 1;
+	mcpsReq.Req.Unconfirmed.Datarate = DR_1;
+	LoRaMacStatus_t state;
+	state =LoRaMacMcpsRequest( &mcpsReq ) ;
+	if( state!= LORAMAC_STATUS_OK )
+	{
+		printf("LoRaMacMlmeRequest( &mlmeReq ) != LORAMAC_STATUS_OK  %d\r\n",state);
+	}
 
+}
 
 

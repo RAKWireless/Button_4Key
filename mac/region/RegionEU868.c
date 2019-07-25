@@ -617,7 +617,7 @@ bool RegionEU868TxConfig( TxConfigParams_t* txConfig, int8_t* txPower, TimerTime
 
     // Calculate physical TX power
     phyTxPower = RegionCommonComputeTxPower( txPowerLimited, txConfig->MaxEirp, txConfig->AntennaGain );
-    printf("phyTxPower	%d dBm\r\n",phyTxPower);
+    //printf("phyTxPower	%d dBm\r\n",phyTxPower);
     // Setup the radio frequency
     Radio.SetChannel( Channels[txConfig->Channel].Frequency );
 
@@ -920,8 +920,9 @@ LoRaMacStatus_t RegionEU868NextChannel( NextChanParams_t* nextChanParams, uint8_
         if( delayTx > 0 )
         {
             // Delay transmission due to AggregatedTimeOff or to a band time off
-            *time = nextTxDelay;
-            return LORAMAC_STATUS_DUTYCYCLE_RESTRICTED;
+            *time = nextTxDelay;   //人为改动
+            //return LORAMAC_STATUS_DUTYCYCLE_RESTRICTED;
+            return LORAMAC_STATUS_OK;
         }
         // Datarate not supported by any channel, restore defaults
         ChannelsMask[0] |= LC( 1 ) + LC( 2 ) + LC( 3 );
