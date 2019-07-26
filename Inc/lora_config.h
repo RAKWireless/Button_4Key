@@ -8,13 +8,33 @@
 #ifndef LORA_CONFIG_H_
 #define LORA_CONFIG_H_
 #include "stdint.h"
-#define FLASH_USER_START_ADDR   0x8080000
+#define FLASH_USER_START_ADDR   (unsigned int)0x8080000
+
+typedef enum {
+	OATT,
+	ABP
+}join_states;
+
+typedef enum {
+  CFG_READ,
+  CFG_WRITE
+}cfg_op;
 
 typedef struct
 {
 	uint8_t dev_eui[8];
 	uint8_t app_eui[8];
 	uint8_t app_key[16];
+
+	uint8_t dev_addr[4];
+	uint8_t apps_key[16];
+	uint8_t nwks_key[16];
+	char temp1;
+	char temp2;
+	char temp3;
+	join_states join_state;
+
+
 }lora_config_t;
 
 

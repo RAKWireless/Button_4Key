@@ -11,11 +11,9 @@
 #include "main.h"
 #include "eeprom.h"
 #include "LoRaMac.h"
+#include "command.h"
 
-typedef enum {
-  CFG_READ,
-  CFG_WRITE
-}cfg_op;
+
 
 #define MAX_ARGV 20
 lora_config_t lora_config;
@@ -41,6 +39,13 @@ static void MlmeIndication( MlmeIndication_t *mlmeIndication );
 
 
 static int dev_eui(int argc , char * argv[],cfg_op op);
+static int app_eui(int argc , char * argv[],cfg_op op);
+static int app_key(int argc , char * argv[],cfg_op op);
+static int dev_addr(int argc , char * argv[],cfg_op op);
+static int apps_key(int argc , char * argv[],cfg_op op);
+static int nwks_key(int argc , char * argv[],cfg_op op);
+
+static int join_mode(int argc , char * argv[],cfg_op op);
 
 struct config_cmd
 {
@@ -52,8 +57,14 @@ struct config_cmd last_cmd_str[]=
 {
 
 
-
+		{"dev_addr",dev_addr},
+		{"apps_key",apps_key},
+		{"nwks_key",nwks_key},
 		{"dev_eui",dev_eui},
+		{"join_mode",join_mode},
+		{"app_eui",app_eui},
+		{"app_key",app_key}
+
 
 
 
@@ -147,7 +158,7 @@ static int analysis_second_string(int argc , char * argv[],cfg_op op)    //ºó°ë½
     //printf("FUNC %s	  argv[1]	%s\r\n",__func__,argv[1]);
 
         argc = parse2_args(str, argv_temp);    //
-        printf("(2) argc:%d			argv[0]:%s		argv[1]:%s\r\n",argc,argv_temp[0],argv_temp[1]);
+        //printf("(2) argc:%d			argv[0]:%s		argv[1]:%s\r\n",argc,argv_temp[0],argv_temp[1]);
         if (argc > 2) {
             printf("Too many parameters.\n");
             return -1;
@@ -183,8 +194,44 @@ static int analysis_second_string(int argc , char * argv[],cfg_op op)    //ºó°ë½
 
 static int handle_lora_config(int argc , char * argv[],cfg_op op)
 {
-	printf("handle_lora_config\r\n");
-	return 0;
+	        int i;
+		    int ret;
+
+		    char *argv_temp[MAX_ARGV];
+
+		    //printf("str 	%s\r\n",argv[1]);
+
+		    //printf("handle_device_config\r\n");
+		    argc = parse2_args(argv[1],argv_temp);    //
+		    //printf("(3) argc:%d			argv[0]:%s		argv[1]:%s\r\n",argc,argv_temp[0],argv_temp[1]);
+		    if (argc > 2)
+		    {
+		                printf("Too many parameters.\n");
+		                return -1;
+		    }else if(argc < 2&&op==CFG_WRITE)
+		    {
+		                printf("Too few parameters.\n");
+		                return -1;
+		    }
+		    for (i = 0; i < sizeof(last_cmd_str)/sizeof(struct config_cmd); i++)
+		          {
+		              if (strcmp(argv_temp[0], last_cmd_str[i].name) == 0)
+		              {
+		                  ret = last_cmd_str[i].function(argc,argv_temp,op);
+		                  if (ret < 0)
+		                  {
+		                      printf("AT CMD parameters error.\n");
+		                      return ret;
+		                  }
+		                  break;
+		              }
+		          }
+		          if (i == sizeof(last_cmd_str)/sizeof(struct config_cmd))
+		          {
+		              printf("AT CMD not found.\n");
+		              return -1;
+		          }
+		   return 0;
 }
 
 
@@ -199,12 +246,12 @@ static int handle_device_config(int argc , char * argv[],cfg_op op)
 
 	    //printf("handle_device_config\r\n");
 	    argc = parse2_args(argv[1],argv_temp);    //
-	    printf("(3) argc:%d			argv[0]:%s		argv[1]:%s\r\n",argc,argv_temp[0],argv_temp[1]);
-	    if (argc > 2)
+	    //printf("(3) argc:%d			argv[0]:%s		argv[1]:%s\r\n",argc,argv_temp[0],argv_temp[1]);
+	    if (argc > 2)  //Ğ´²ÎÊıµÄÊ±ºòÒ²Ó¦¸Ã¼ÓÒÔÏŞÖÆ
 	    {
 	                printf("Too many parameters.\n");
 	                return -1;
-	    }else if(argc < 2)
+	    }else if(argc < 2&&op==CFG_WRITE)
 	    {
 	                printf("Too few parameters.\n");
 	                return -1;
@@ -236,9 +283,48 @@ static int handle_device_config(int argc , char * argv[],cfg_op op)
 
 static int dev_eui(int argc , char * argv[],cfg_op op)
 {
+
+	if(op==CFG_READ)
+	{
+		printf("app_eui:%02X%02X%02X%02X%02X%02X%02X%02X\r\n",lora_config.dev_eui[0],lora_config.dev_eui[1],lora_config.dev_eui[2],lora_config.dev_eui[3],lora_config.dev_eui[4],
+				lora_config.dev_eui[5],lora_config.dev_eui[6],lora_config.dev_eui[7]);
+	}
+	else
+	{
+		AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.dev_eui, strlen(argv[1]));
+		printf("ok\r\n");
+//		printf("app_eui:%02X %02X %02X %02X %02X %02X %02X %02X\r\n",lora_config.app_eui[0],lora_config.app_eui[1],lora_config.app_eui[2],lora_config.app_eui[3],lora_config.app_eui[4],
+//		lora_config.app_eui[5],lora_config.app_eui[6],lora_config.app_eui[7]);
+
+
+	}
+
 	//printf("dev_eui(int argc , char * argv[],cfg_op op)\r\n");
 	return 0;
 }
+
+static int app_eui(int argc , char * argv[],cfg_op op)
+{
+
+	if(op==CFG_READ)
+	{
+		printf("app_eui:%02X%02X%02X%02X%02X%02X%02X%02X\r\n",lora_config.app_eui[0],lora_config.app_eui[1],lora_config.app_eui[2],lora_config.app_eui[3],lora_config.app_eui[4],
+				lora_config.app_eui[5],lora_config.app_eui[6],lora_config.app_eui[7]);
+	}
+	else
+	{
+		AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.app_eui, strlen(argv[1]));
+		printf("ok\r\n");
+//		printf("app_eui:%02X %02X %02X %02X %02X %02X %02X %02X\r\n",lora_config.app_eui[0],lora_config.app_eui[1],lora_config.app_eui[2],lora_config.app_eui[3],lora_config.app_eui[4],
+//		lora_config.app_eui[5],lora_config.app_eui[6],lora_config.app_eui[7]);
+
+
+	}
+
+	//printf("dev_eui(int argc , char * argv[],cfg_op op)\r\n");
+	return 0;
+}
+
 
 
 
@@ -280,29 +366,20 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
 	            {
 	                // Status is OK, node has joined the network
 	            	printf("Status is OK, node has joined the network\r\n");
+//	            	LED_Init();
+//	            	LED4_State(0);
+//	            	HAL_Delay(500);
+//	            	LED4_State(1);
+//	            	HAL_Delay(200);
+//	            	LED4_State(0);
+//	            	HAL_Delay(500);
+//	            	LED4_State(1);
 
 	            }
 	            else
 	            {
 	            	printf("Join was not successful. Try to join again\r\n");
-	                // Join was not successful. Try to join again
-//	                MlmeReq_t mlmeReq;
-//	                mlmeReq.Type = MLME_JOIN;
-//	                mlmeReq.Req.Join.DevEui = DevEui;
-//	                mlmeReq.Req.Join.AppEui = AppEui;
-//	                mlmeReq.Req.Join.AppKey = AppKey;
-//	                mlmeReq.Req.Join.Datarate = LORAWAN_DEFAULT_DATARATE;
-//
-//	                if( LoRaMacMlmeRequest( &mlmeReq ) == LORAMAC_STATUS_OK )
-//	                {
-//	                    DeviceState = DEVICE_STATE_SLEEP;
-//	                    printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
-//	                }
-//	                else
-//	                {
-//	                    DeviceState = DEVICE_STATE_CYCLE;
-//	                    printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
-//	                }
+
 	            }
 	            break;
 
@@ -327,21 +404,21 @@ static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
 void lora_join(int argc, char *argv[])
 {
  unsigned char i=0;
- unsigned char temp_dev_eui[]={ 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xA1 };
- unsigned char temp_app_eui[]={0x70, 0xB3, 0xD5, 0x7E, 0xD0, 0x01, 0xA2, 0xA1 };
- unsigned char temp_app_key[]={0x5A, 0x0C, 0xA2, 0xF8, 0xC9, 0xB8, 0xE4, 0x55, 0x33, 0x43, 0x5F, 0xC2, 0xA1, 0x3B, 0xA0, 0x73};
+// unsigned char temp_dev_eui[]={ 0x47, 0xAA, 0xC8, 0x68, 0x00, 0x43, 0x00, 0x28 };
+// unsigned char temp_app_eui[]={ 0x70, 0xB3, 0xD5, 0x7E, 0xD0, 0x01, 0xA1, 0xE2 };
+// unsigned char temp_app_key[]={ 0x8A, 0xFE, 0x71, 0xA1, 0x45, 0xB2, 0x53, 0xE4, 0x9C, 0x30, 0x31, 0xAD, 0x06, 0x82, 0x77, 0xA1 };
 
- for(i=0;i<8;i++)
- {
-	 lora_config.dev_eui[i]=temp_dev_eui[i];
-	 lora_config.app_eui[i]=temp_app_eui[i];
- }
-
- for(i=0;i<16;i++)
-  {
- 	 lora_config.app_key[i]=temp_app_key[i];
-
-  }
+// for(i=0;i<8;i++)
+// {
+//	 lora_config.dev_eui[i]=temp_dev_eui[i];
+//	 lora_config.app_eui[i]=temp_app_eui[i];
+// }
+//
+// for(i=0;i<16;i++)
+//  {
+// 	 lora_config.app_key[i]=temp_app_key[i];
+//
+//  }
 
 
  //MlmeReq_t mlmeReq;	                // Initialize LoRaMac device unique ID
@@ -358,6 +435,8 @@ if( state!= LORAMAC_STATUS_OK )
 {
 	printf("+MEMSREQ:%d\r\nERROR\r\n",state);
 }
+else
+printf("ok\r\n");
 }
 
 
@@ -376,5 +455,132 @@ void lora_send(int port,const unsigned char* Appdata)
 	}
 
 }
+
+
+static int join_mode(int argc , char * argv[],cfg_op op)
+{
+	if(op==CFG_READ)
+	{
+		if(lora_config.join_state==OATT)
+			printf("join_mode: OATT\r\n");
+		else
+			printf("join_mode: ABP\r\n");
+	}
+	else
+	{
+		if(argv[1]==OATT)
+		{
+			lora_config.join_state=OATT;
+		}
+		else
+		{
+			lora_config.join_state=ABP;
+			printf("ok\r\n");
+		}
+
+
+	}
+
+	return 0;
+
+}
+
+
+
+static int app_key(int argc , char * argv[],cfg_op op)
+{
+	char i;
+	if(op==CFG_READ)
+		{
+			for(i=0;i<16;i++)
+			{
+				printf("%02X",lora_config.app_key[i]);
+
+			}
+			printf("\r\n");
+
+		}
+		else
+		{
+			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.app_key, strlen(argv[1]));
+			printf("ok\r\n");
+		}
+
+		return 0;
+}
+
+static int apps_key(int argc , char * argv[],cfg_op op)
+{
+	char i;
+	if(op==CFG_READ)
+		{
+			for(i=0;i<16;i++)
+			{
+				printf("%02X",lora_config.apps_key[i]);
+
+			}
+			printf("\r\n");
+
+		}
+		else
+		{
+			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.apps_key, strlen(argv[1]));
+			printf("ok\r\n");
+		}
+
+		return 0;
+}
+
+static int nwks_key(int argc , char * argv[],cfg_op op)
+{
+	char i;
+	if(op==CFG_READ)
+		{
+			for(i=0;i<16;i++)
+			{
+				printf("%02X",lora_config.nwks_key[i]);
+
+			}
+			printf("\r\n");
+		}
+		else
+		{
+			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.nwks_key, strlen(argv[1]));
+			printf("ok\r\n");
+		}
+
+		return 0;
+}
+
+static int dev_addr(int argc , char * argv[],cfg_op op)
+{
+	char i;
+	if(op==CFG_READ)
+		{
+			for(i=0;i<4;i++)
+			{
+				printf("%02X",lora_config.dev_addr[i]);
+
+			}
+			printf("\r\n");
+
+		}
+		else
+		{
+			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.dev_addr, strlen(argv[1]));
+			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
+			printf("ok\r\n");
+		}
+
+		return 0;
+}
+
+
+
+
+
+
+
+
 
 

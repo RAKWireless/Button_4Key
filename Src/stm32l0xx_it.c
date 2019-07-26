@@ -143,7 +143,7 @@ void USAR_UART_IDLECallback(UART_HandleTypeDef *huart)
    uint8_t data_length  = USART_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);   //计算接收到的数据长度
    Receive_buff[data_length]=0;
 
-    //printf("Receive Data(length = %d): %s",data_length,(char*)Receive_buff);
+    //printf("Receive Data(length = %d):",data_length);
 
     //HAL_UART_Transmit(&huart2,(uint8_t*)Receive_buff,data_length,0x200);                     //测试函数：将接收到的数据打印出去
     //printf("\r\n");
@@ -153,7 +153,7 @@ void USAR_UART_IDLECallback(UART_HandleTypeDef *huart)
 
     memset(Receive_buff,0,data_length);                                            //清零接收缓冲区
     data_length = 0;
-    HAL_UART_Receive_DMA(&huart2, Receive_buff, 255);                    //重启开始DMA传输 每次255字节数据
+    HAL_UART_Receive_DMA(&huart2, Receive_buff, 128);                    //重启开始DMA传输 每次255字节数据
 }
 
 void USER_UART_IRQHandler(UART_HandleTypeDef *huart)
@@ -174,9 +174,19 @@ void USER_UART_IRQHandler(UART_HandleTypeDef *huart)
 void USART2_IRQHandler(void)
 {
 
+//	LED_Init();
+//	LED4_State(0);
+//	HAL_Delay(500);
+//	LED4_State(1);
+//	HAL_Delay(200);
+//	LED4_State(0);
+//	HAL_Delay(500);
+//	LED4_State(1);
 
     HAL_UART_IRQHandler(&huart2);
+    RtcRecoverMcuStatus();
     USER_UART_IRQHandler(&huart2);
+
     /* USER CODE END USART1_IRQn 1 */
 }
 

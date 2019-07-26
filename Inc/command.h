@@ -10,7 +10,7 @@
 
 void CMD_Process( unsigned char* rxChar);
 
-
+char  AsciiToHex(unsigned char * pAscii, unsigned char * pHex, int nLen);
 #define MAX_ARGV 20
 
 

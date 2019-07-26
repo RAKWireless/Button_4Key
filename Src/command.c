@@ -32,6 +32,7 @@ struct cli_cmds First_cmds[] =
 		{"get_config",		commmon_read_config},
 		{"set_config",		commmon_set_config},
 
+
 };
 
 void CMD_Process( unsigned char* rxChar)
@@ -45,7 +46,7 @@ void CMD_Process( unsigned char* rxChar)
 	    	printf("AT Command ERROR\r\n");
 	        return;
 	    }
-	    printf("[Echo cmd:] %s\r\n", rxChar);
+	    //printf("[Echo cmd:] %s\r\n", rxChar);
 	    rxChar += 3;
 	    argc = parse_args((char*)rxChar, argv);
 	    //printf("(1) argc:%d	argv[0]:%s	argv[1]:%s\r\n",argc,argv[0],argv[1]);
@@ -159,4 +160,37 @@ static void commmon_set_config(int argc, char *argv[])
 }
 
 
+char  AsciiToHex(unsigned char * pAscii, unsigned char * pHex, int nLen)
+{
+	int nHexLen = nLen / 2;
+	unsigned char Nibble[2] = {0};
+	int i = 0;
+	int j = 0;
+
+	if (nLen%2)
+	{
+		return 1;
+	}
+
+	for (i = 0; i < nHexLen; i ++)
+	{
+		Nibble[0] = *pAscii ++;
+		Nibble[1] = *pAscii ++;
+		for (j = 0; j < 2; j ++)
+		{
+			if (Nibble[j] <= 'F' && Nibble[j] >= 'A')
+				Nibble[j] = Nibble[j] - 'A' + 10;
+			else if (Nibble[j] <= 'f' && Nibble[j] >= 'a')
+				Nibble[j] = Nibble[j] - 'a' + 10;
+			else if (Nibble[j] >= '0' && Nibble[j] <= '9')
+				Nibble [j] = Nibble[j] - '0';
+			else
+				return 1;//Nibble[j] = Nibble[j] - 'a' + 10;
+
+		}	// for (int j = ...)
+		pHex[i] = Nibble[0] << 4;	// Set the high nibble
+		pHex[i] |= Nibble[1];	//Set the low nibble
+	}	// for (int i = ...)
+	return 0;
+}
 

@@ -75,6 +75,7 @@ void MX_GPIO_Init(void)
 /* USER CODE BEGIN 2 */
 void Key1_Fall()
 {
+
 	printf("KEY1 Fall\r\n");
 	unsigned char str[1]={0x01};
 	lora_send(1,str);
@@ -83,6 +84,7 @@ void Key1_Fall()
 
 void Key2_Fall()
 {
+
 	printf("KEY2 Fall\r\n");
 	unsigned char str[1]={0x02};
 	lora_send(2,str);

@@ -26,7 +26,7 @@
 
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
-uint8_t Receive_buff[255];
+uint8_t Receive_buff[128];
 /* USART2 init function */
 
 void MX_USART2_UART_Init(void)
@@ -38,7 +38,7 @@ void MX_USART2_UART_Init(void)
 
 
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 115200;
+  huart2.Init.BaudRate = 9600;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
@@ -61,8 +61,21 @@ void MX_USART2_UART_Init(void)
 
 
   __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
-  HAL_UART_Receive_DMA(&huart2, Receive_buff, 255);
+  HAL_UART_Receive_DMA(&huart2, Receive_buff, 128);
 
+
+//  while(__HAL_UART_GET_FLAG(&huart2, USART_ISR_BUSY) == SET);
+//  while(__HAL_UART_GET_FLAG(&huart2, USART_ISR_REACK) == RESET);
+
+  UART_WakeUpTypeDef WakeUpSelection;
+  __HAL_UART_ENABLE_IT(&huart2, UART_IT_WUF);
+  WakeUpSelection.WakeUpEvent = UART_WAKEUP_ON_READDATA_NONEMPTY;
+//  WakeUpSelection.AddressLength = UART_ADDRESS_DETECT_7B;
+//  WakeUpSelection.Address = 0x29;
+  if (HAL_UARTEx_StopModeWakeUpSourceConfig(&huart2, WakeUpSelection)!= HAL_OK)
+   {
+     Error_Handler();
+   }
 
 }
 

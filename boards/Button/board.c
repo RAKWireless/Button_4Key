@@ -32,6 +32,7 @@
 #include "rtc-board.h"
 #include "sx126x-board.h"
 #include "board.h"
+#include "lora_config.h"
 
 /*!
  * Unique Devices IDs register set ( STM32L0xxx )
@@ -46,6 +47,9 @@
 Gpio_t Led1;
 Gpio_t Led2;
 Gpio_t Led3;
+
+Gpio_t Led4;
+Gpio_t Led5;
 
 /*
  * MCU objects
@@ -133,40 +137,22 @@ void BoardInitPeriph( void )
 
 void BoardInitMcu( void )
 {
+	    HAL_Init();
+		SystemClock_Config();
+		MX_GPIO_Init();
+		MX_USART2_UART_Init();
+		MX_SPI1_Init();
+		SX126xIoInit();
+		KeyCallbackInit();
+		RtcInit();
+		FLASH_Read(0x08080000, lora_config, sizeof( lora_config_t));
+
+//	    HAL_DBGMCU_EnableDBGSleepMode( );
+//		GpioInit( &Led1, LED_1, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+//      GpioInit( &Led2, LED_2, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+//      GpioInit( &Led3, LED_3, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
 
 
-//        HAL_Init( );
-
-        // LEDs
-		GpioInit( &Led1, LED_1, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-        GpioInit( &Led2, LED_2, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-        GpioInit( &Led3, LED_3, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-
-//        SystemClockConfig( );
-
-//        UsbIsConnected = true;
-//
-//        FifoInit( &Uart2.FifoTx, Uart2TxBuffer, UART2_FIFO_TX_SIZE );
-//        FifoInit( &Uart2.FifoRx, Uart2RxBuffer, UART2_FIFO_RX_SIZE );
-        // Configure your terminal for 8 Bits data (7 data bit + 1 parity bit), no parity and no flow ctrl
-//        UartInit( &Uart2, UART_2, UART_TX, UART_RX );
-//        UartConfig( &Uart2, RX_TX, 115200, UART_8_BIT, UART_1_STOP_BIT, NO_PARITY, NO_FLOW_CTRL );
-
-//        RtcInit( );
-
-//        BoardUnusedIoInit( );
-
-
-
-
-//    if( McuInitialized == false )
-//    {
-//        McuInitialized = true;
-//        if( GetBoardPowerSource( ) == BATTERY_POWER )
-//        {
-//            CalibrateSystemWakeupTime( );
-//        }
-//    }
 }
 
 void LED_Cycle()
@@ -186,9 +172,45 @@ void LED_Cycle()
 
 }
 
+void LED_Init()
+{
+	GpioInit( &Led1, LED_1, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+	GpioInit( &Led2, LED_2, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+	GpioInit( &Led3, LED_3, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+
+	GpioInit( &Led4, LED_4, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+	GpioInit( &Led5, LED_5, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+}
+
+void LED1_State(uint32_t state)
+{
+	GpioWrite(&Led1,state);
+}
+
+void LED2_State(uint32_t state)
+{
+	GpioWrite(&Led2,state);
+}
+
+void LED3_State(uint32_t state)
+{
+	GpioWrite(&Led3,state);
+}
+
+void LED4_State(uint32_t state)
+{
+	GpioWrite(&Led4,state);
+}
+
+void LED5_State(uint32_t state)
+{
+	GpioWrite(&Led5,state);
+}
+
 
 void BoardResetMcu( void )
 {
+
     BoardDisableIrq( );
 
     //Restart system
@@ -198,6 +220,17 @@ void BoardResetMcu( void )
 
 void BoardDeInitMcu( void )
 {
+
+	HAL_SPI_DeInit(&hspi1);
+	LED_Init();
+	LED1_State(1);
+	LED2_State(1);
+	LED3_State(1);
+	LED4_State(1);
+	LED5_State(1);
+
+	//__HAL_RCC_DMA1_CLK_DISABLE();
+	//SX126xIoDeInit();
 
 }
 

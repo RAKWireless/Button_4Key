@@ -107,6 +107,9 @@
 #define LED_1										PA_7
 #define LED_2										PA_6
 #define LED_3										PA_5
+
+#define LED_4										PA_14
+#define LED_5										PA_13
 #define RADIO_NSS									PA_4
 #define RADIO_RESET									PA_0
 #define RADIO_BUSY									PA_15

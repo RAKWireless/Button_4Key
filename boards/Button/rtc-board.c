@@ -381,7 +381,13 @@ void RtcRecoverMcuStatus( void )
         //BoardInitMcu( );
 
     }
+
+
     SystemClock_Config();
+    //__HAL_RCC_DMA1_CLK_ENABLE();
+    //SX126xIoInit();
+    MX_SPI1_Init();
+
 
 
 }
@@ -737,9 +743,8 @@ void RTC_IRQHandler( void )
     RtcRecoverMcuStatus( );
     RtcComputeWakeUpTime( );
     BlockLowPowerDuringTask( false );
-//    printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
     TimerIrqHandler( );
-//    printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+
 }
 
 void RtcProcess( void )
