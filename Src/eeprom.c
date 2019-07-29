@@ -48,6 +48,8 @@ void Flash_write(uint32_t wr_addr, void *buffer, uint16_t wr_len)
 void FLASH_Read(uint32_t addr, void *buffer, uint16_t len)
 {
        memcpy(buffer, (void *)addr, len);
+	//__IO uint32_t
+	 //  memcpy(buffer, (__IO uint32_t  *)addr, len);
 }
 
 

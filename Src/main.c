@@ -43,9 +43,7 @@ int main(void)
 {
 	BoardInitMcu();
 	HAL_Delay(1000); //ÃÕÖ®ÑÓÊ±
-//	RCC->APB2ENR|=1;
-//	AFIO->MAPR&=0xf8ffffff;
-//	AFIO->MAPR|=0x04000000;
+
 
 	printf("\r\n======================================================================");
 	//printf("\r\n=              (C) COPYRIGHT 2015 STMicroelectronics                 =");
@@ -57,14 +55,15 @@ int main(void)
 	printf("\r\n\r\n");
 
 	InitLora();
+
 	while(1)
 	{
 
 		 BoardDeInitMcu();
-		 HAL_Delay(100);
+		 HAL_Delay(500);
 
 		 __HAL_RCC_PWR_CLK_ENABLE();
-		 printf("Enter stop mode\r\n");
+		 //printf("Enter stop mode\r\n");
 		 __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_HSI);
 		 HAL_UARTEx_EnableStopMode(&huart2);
 		 HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);

@@ -145,7 +145,7 @@ void BoardInitMcu( void )
 		SX126xIoInit();
 		KeyCallbackInit();
 		RtcInit();
-		FLASH_Read(0x08080000, lora_config, sizeof( lora_config_t));
+		FLASH_Read(FLASH_USER_START_ADDR, lora_config, sizeof( lora_config_t));
 
 //	    HAL_DBGMCU_EnableDBGSleepMode( );
 //		GpioInit( &Led1, LED_1, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
