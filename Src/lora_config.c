@@ -604,7 +604,7 @@ static int app_key(int argc , char * argv[],cfg_op op)
 		{
 			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.app_key, strlen(argv[1]));
 			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
-			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
+
 			printf("ok\r\n");
 		}
 
