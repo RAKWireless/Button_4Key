@@ -32,7 +32,7 @@ typedef struct
 	char temp1;
 	char temp2;
 	char temp3;
-	volatile join_states join_state;
+    join_states join_state;
 
 
 }lora_config_t;

@@ -142,15 +142,15 @@ void USAR_UART_IDLECallback(UART_HandleTypeDef *huart)
    HAL_UART_DMAStop(&huart2);                                                     //停止本次DMA传输
    uint8_t data_length  = USART_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);   //计算接收到的数据长度
    //Receive_buff[data_length]=0;
-   if(Receive_buff[data_length-1]==0x0A&&Receive_buff[data_length-2]==0x0D)
-   {
-	   //printf("Receive Data(length = %d):",data_length);
-	   Receive_buff[data_length-2] = 0;
-   }
-   else
-   {
+//   if(Receive_buff[data_length-1]==0x0A&&Receive_buff[data_length-2]==0x0D)
+//   {
+//	   //printf("Receive Data(length = %d):",data_length);
+//	   Receive_buff[data_length-2] = 0;
+//   }
+//   else
+//   {
 	   Receive_buff[data_length] = 0;
-   }
+ //  }
 
 
 //   printf("Receive Data(length = %d):",data_length);
@@ -161,7 +161,7 @@ void USAR_UART_IDLECallback(UART_HandleTypeDef *huart)
     if(data_length!=0)
     CMD_Process(Receive_buff);
 
-    memset(Receive_buff,0,data_length);                                            //清零接收缓冲区
+    memset(Receive_buff,0,128);                                            //清零接收缓冲区
     data_length = 0;
     HAL_UART_Receive_DMA(&huart2, Receive_buff, 128);                    //重启开始DMA传输 每次255字节数据
 }

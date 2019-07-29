@@ -10,12 +10,14 @@
 #include "stdio.h"
 #include "stddef.h"
 #include "lora_config.h"
+#include "stm32l0xx.h"
 
 
 static void commmon_read_config(int argc, char *argv[]);
 static void commmon_set_config(int argc, char *argv[]);
 static int parse_args(char* str, char* argv[]);
 static void reset(int argc, char *argv[]);
+static void boot(int argc, char *argv[]);
 struct cli_cmds {
     /** The name of the CLI command */
     const char *name;
@@ -30,7 +32,9 @@ struct cli_cmds First_cmds[] =
 		{"join",				lora_join},
 		{"get_config",		commmon_read_config},
 		{"set_config",		commmon_set_config},
-		{"reset",				reset	}
+		{"reset",				reset	},
+		{"boot",				boot	}
+
 //		__set_FAULTMASK(1);
 //		HAL_NVIC_SystemReset();
 
@@ -199,6 +203,27 @@ char  AsciiToHex(unsigned char * pAscii, unsigned char * pHex, int nLen)
 
 static void reset(int argc, char *argv[])
 {
-	//__set_FAULTMASK(1);
+	uint32_t  Boot_addr = 0x08080700;
+	uint32_t  *buffer;
+	*buffer = *(__IO uint32_t  *)Boot_addr;
+	printf("%08X\r\n",buffer[0]);
 	HAL_NVIC_SystemReset();
 }
+
+static void boot(int argc, char *argv[])
+{
+	 uint32_t  Boot_addr = 0x08080700;
+	 uint32_t  *buffer;
+	 HAL_FLASH_Unlock();
+	 HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, Boot_addr , 0x00008888);
+	 HAL_FLASH_Lock();
+	 *buffer = *(__IO uint32_t  *)Boot_addr;
+	 printf("%08X\r\n",buffer[0]);
+
+}
+
+
+
+
+
+

@@ -59,14 +59,14 @@ int main(void)
 	while(1)
 	{
 
-		 BoardDeInitMcu();
-		 HAL_Delay(500);
-
-		 __HAL_RCC_PWR_CLK_ENABLE();
-		 //printf("Enter stop mode\r\n");
-		 __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_HSI);
-		 HAL_UARTEx_EnableStopMode(&huart2);
-		 HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
+//		 BoardDeInitMcu();
+//		 HAL_Delay(500);
+//
+//		 __HAL_RCC_PWR_CLK_ENABLE();
+//		 //printf("Enter stop mode\r\n");
+//		 __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_HSI);
+//		 HAL_UARTEx_EnableStopMode(&huart2);
+//		 HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
 
 	}
   /* USER CODE END 3 */
