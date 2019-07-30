@@ -406,6 +406,44 @@ static void McpsIndication( McpsIndication_t *mcpsIndication )
 static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
 {
 
+	//printf("%s	%s	%d	%d\r\n",__FILE__,__func__,__LINE__,mcpsConfirm->McpsRequest);
+	if( mcpsConfirm->Status == LORAMAC_EVENT_INFO_STATUS_OK )
+	    {
+
+	        switch( mcpsConfirm->McpsRequest )
+	        {
+	            case MCPS_UNCONFIRMED:
+	            {
+	                // Check Datarate
+	                // Check TxPower
+	                break;
+	            }
+	            case MCPS_CONFIRMED:
+	            {
+
+	            	Serial_PutString("MCPS confirmed succseeful\r\n");
+	            	//while(1);
+	                // Check Datarate
+	                // Check TxPower
+	                // Check AckReceived
+	                // Check NbTrials
+	                break;
+	            }
+	            case MCPS_PROPRIETARY:
+	            {
+	                break;
+	            }
+	            default:
+	                break;
+	        }
+	    }
+	else
+	{
+		Serial_PutString("Rx timeout\r\n");
+		LED_RED();
+	}
+
+
 }
 
 
@@ -469,8 +507,10 @@ if( state!= LORAMAC_STATUS_OK )
 {
 	printf("+MEMSREQ:%d\r\nERROR\r\n",state);
 }
-
-//
+else
+{
+   printf("Joining ... ...\r\n");
+}
  }
  else
  {
@@ -549,6 +589,7 @@ void lora_send(int port,const unsigned char* Appdata)
 	if( state!= LORAMAC_STATUS_OK )
 	{
 		printf("+MCPSREQ:%d\r\nERROR\r\n",state);
+		LED_RED();
 	}
 
 }

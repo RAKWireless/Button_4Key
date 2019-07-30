@@ -203,10 +203,10 @@ char  AsciiToHex(unsigned char * pAscii, unsigned char * pHex, int nLen)
 
 static void reset(int argc, char *argv[])
 {
-	uint32_t  Boot_addr = 0x08080700;
-	uint32_t  *buffer;
-	*buffer = *(__IO uint32_t  *)Boot_addr;
-	printf("%08X\r\n",buffer[0]);
+//	uint32_t  Boot_addr = 0x08080700;
+//	uint32_t  *buffer;
+//	*buffer = *(__IO uint32_t  *)Boot_addr;
+//	printf("%08X\r\n",buffer[0]);
 	HAL_NVIC_SystemReset();
 }
 

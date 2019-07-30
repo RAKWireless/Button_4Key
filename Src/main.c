@@ -46,7 +46,7 @@ int main(void)
 {
 	//SCB->VTOR = FLASH_BASE | 0x2800;//
 	BoardInitMcu();
-	HAL_Delay(1000); //谜之延时
+	HAL_Delay(500); //谜之延时
 
 
 	printf("\r\n======================================================================");
@@ -60,11 +60,15 @@ int main(void)
 
 	InitLora();
 
+
+////	HAL_SPI_DeInit(&hspi1);
+//	MX_SPI1_Init();
+
 	while(1)
 	{
 
 		 BoardDeInitMcu();
-		 HAL_Delay(500);
+		 HAL_Delay(1500);
 
 		 __HAL_RCC_PWR_CLK_ENABLE();
 		 //printf("Enter stop mode\r\n");

@@ -140,13 +140,25 @@ void BoardInitMcu( void )
 {
 	    HAL_Init();
 		SystemClock_Config();
+
 		MX_GPIO_Init();
+		LED_Init();     //加了LED可以正常join
+		LED_ALL_ON();
+		HAL_Delay(200);
+		LED_ALL_OFF();
+		HAL_Delay(200);
+		LED_ALL_ON();
+		HAL_Delay(200);
+		LED_ALL_OFF();
 		MX_USART2_UART_Init();
+
+
+
 		MX_SPI1_Init();
 		SX126xIoInit();
 		KeyCallbackInit();
 		RtcInit();
-		FLASH_Read(FLASH_USER_START_ADDR, &lora_config, sizeof( lora_config_t));
+		FLASH_Read(FLASH_USER_START_ADDR, &lora_config, sizeof( lora_config_t));  //注意第二个参数的指针
 
 //	    HAL_DBGMCU_EnableDBGSleepMode( );
 //		GpioInit( &Led1, LED_1, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
@@ -182,6 +194,39 @@ void LED_Init()
 	GpioInit( &Led4, LED_4, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
 	GpioInit( &Led5, LED_5, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
 }
+
+void LED_ALL_ON()
+{
+	LED1_State(0);
+	LED2_State(0);
+	LED3_State(0);
+	LED4_State(0);
+	LED5_State(0);
+}
+
+void LED_ALL_OFF()
+{
+	LED1_State(1);
+	LED2_State(1);
+	LED3_State(1);
+	LED4_State(1);
+	LED5_State(1);
+}
+
+void LED_RED()
+{
+	GpioInit( &Led5, LED_5, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+	LED5_State(0);
+	HAL_Delay(150);
+	LED5_State(1);
+	HAL_Delay(150);
+	LED5_State(0);
+	HAL_Delay(150);
+	LED5_State(1);
+
+
+}
+
 
 void LED1_State(uint32_t state)
 {
@@ -234,6 +279,9 @@ void BoardDeInitMcu( void )
 	//SX126xIoDeInit();
 
 }
+
+
+
 
 uint32_t BoardGetRandomSeed( void )
 {
