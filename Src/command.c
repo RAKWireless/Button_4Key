@@ -213,12 +213,14 @@ static void reset(int argc, char *argv[])
 static void boot(int argc, char *argv[])
 {
 	 uint32_t  Boot_addr = 0x08080700;
-	 uint32_t  *buffer;
+	 //uint32_t  *buffer;
 	 HAL_FLASH_Unlock();
-	 HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, Boot_addr , 0x00008888);
+	 HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, Boot_addr , 0x00001234);
 	 HAL_FLASH_Lock();
-	 *buffer = *(__IO uint32_t  *)Boot_addr;
-	 printf("%08X\r\n",buffer[0]);
+//	 *buffer = *(__IO uint32_t  *)Boot_addr;
+//	 printf("%08X\r\n",buffer[0]);
+	 printf("Enter bootloader ......\r\n");
+	 HAL_NVIC_SystemReset();
 
 }
 

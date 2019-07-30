@@ -204,7 +204,7 @@ static int handle_lora_config(int argc , char * argv[],cfg_op op)
 		    //printf("handle_device_config\r\n");
 		    argc = parse2_args(argv[1],argv_temp);    //
 		    //printf("(3) argc:%d			argv[0]:%s		argv[1]:%s\r\n",argc,argv_temp[0],argv_temp[1]);
-		    if (argc > 2||argc > 1&&op==CFG_READ )
+		    if (argc > 2||(argc > 1&&op==CFG_READ ))
 		    {
 		                printf("Too many parameters.\n");
 		                return -1;
@@ -344,13 +344,13 @@ void InitLora()
 	  //LoRaMacCallbacks.GetBatteryLevel = BoardGetBatteryLevel;
 	  	LoRaMacInitialization( &LoRaMacPrimitives, &LoRaMacCallbacks, LORAMAC_REGION_EU868 );
 
-//	  	 mibReq.Type = MIB_ADR;
-//	  	 mibReq.Param.AdrEnable = 1;
-//	  	 LoRaMacMibSetRequestConfirm( &mibReq );
-//
-//	  	 mibReq.Type = MIB_PUBLIC_NETWORK;
-//	  	 mibReq.Param.EnablePublicNetwork = true;
-//	  	 LoRaMacMibSetRequestConfirm( &mibReq );
+	  	 mibReq.Type = MIB_ADR;     //ADR 没有问题
+	  	 mibReq.Param.AdrEnable = 1;
+	  	 LoRaMacMibSetRequestConfirm( &mibReq );
+
+	  	 mibReq.Type = MIB_PUBLIC_NETWORK;
+	  	 mibReq.Param.EnablePublicNetwork = true;
+	  	 LoRaMacMibSetRequestConfirm( &mibReq );
 
 
 }
@@ -470,9 +470,7 @@ if( state!= LORAMAC_STATUS_OK )
 	printf("+MEMSREQ:%d\r\nERROR\r\n",state);
 }
 
-//			   mibReq.Type = MIB_NET_ID;
-//             mibReq.Param.NetID = LORAWAN_NETWORK_ID;
-//             LoRaMacMibSetRequestConfirm( &mibReq );
+//
  }
  else
  {
@@ -483,6 +481,9 @@ if( state!= LORAMAC_STATUS_OK )
 //    		mibReq.Param.DevAddr[i]=lora_config.dev_addr[i];
 //
 //     	 }
+//	 	 	 mibReq.Type = MIB_NET_ID;
+//	         mibReq.Param.NetID = 0;
+//	         LoRaMacMibSetRequestConfirm( &mibReq );
 
 
  	 		 mibReq.Param.DevAddr=(uint32_t)lora_config.dev_addr[3]+  ((uint32_t)lora_config.dev_addr[2]<<8)+

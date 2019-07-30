@@ -16,6 +16,9 @@
   *
   ******************************************************************************
   */
+//DR0 进入txdone 不要立即切换模式，可能导致发射异常，需要验证
+//开机谜之延时，否者串口空闲中断工作异常
+
 
 #include "main.h"
 #include "spi.h"
@@ -41,6 +44,7 @@
 //SWDCLK灯常亮
 int main(void)
 {
+	//SCB->VTOR = FLASH_BASE | 0x2800;//
 	BoardInitMcu();
 	HAL_Delay(1000); //谜之延时
 
@@ -59,14 +63,14 @@ int main(void)
 	while(1)
 	{
 
-//		 BoardDeInitMcu();
-//		 HAL_Delay(500);
-//
-//		 __HAL_RCC_PWR_CLK_ENABLE();
-//		 //printf("Enter stop mode\r\n");
-//		 __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_HSI);
-//		 HAL_UARTEx_EnableStopMode(&huart2);
-//		 HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
+		 BoardDeInitMcu();
+		 HAL_Delay(500);
+
+		 __HAL_RCC_PWR_CLK_ENABLE();
+		 //printf("Enter stop mode\r\n");
+		 __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_HSI);
+		 HAL_UARTEx_EnableStopMode(&huart2);
+		 HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
 
 	}
   /* USER CODE END 3 */

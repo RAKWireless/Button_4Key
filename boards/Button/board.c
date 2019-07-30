@@ -33,6 +33,7 @@
 #include "sx126x-board.h"
 #include "board.h"
 #include "lora_config.h"
+#include "eeprom.h"
 
 /*!
  * Unique Devices IDs register set ( STM32L0xxx )
@@ -145,7 +146,7 @@ void BoardInitMcu( void )
 		SX126xIoInit();
 		KeyCallbackInit();
 		RtcInit();
-		FLASH_Read(FLASH_USER_START_ADDR, lora_config, sizeof( lora_config_t));
+		FLASH_Read(FLASH_USER_START_ADDR, &lora_config, sizeof( lora_config_t));
 
 //	    HAL_DBGMCU_EnableDBGSleepMode( );
 //		GpioInit( &Led1, LED_1, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
