@@ -192,6 +192,7 @@ void USART2_IRQHandler(void)
 //	LED4_State(0);
 //	HAL_Delay(500);
 //	LED4_State(1);
+//	HAL_UART_MspInit(&huart2);
 
     HAL_UART_IRQHandler(&huart2);
     RtcRecoverMcuStatus();

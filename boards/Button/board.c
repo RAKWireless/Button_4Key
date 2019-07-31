@@ -201,7 +201,7 @@ void LED_ALL_ON()
 	LED2_State(0);
 	LED3_State(0);
 	LED4_State(0);
-	LED5_State(0);
+	//LED5_State(0);
 }
 
 void LED_ALL_OFF()
@@ -210,7 +210,7 @@ void LED_ALL_OFF()
 	LED2_State(1);
 	LED3_State(1);
 	LED4_State(1);
-	LED5_State(1);
+	//LED5_State(1);
 }
 
 void LED_RED()

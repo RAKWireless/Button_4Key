@@ -44,7 +44,7 @@
 //SWDCLKµ∆≥£¡¡
 int main(void)
 {
-	//SCB->VTOR = FLASH_BASE | 0x2800;//
+	SCB->VTOR = FLASH_BASE | 0x2800;//
 	BoardInitMcu();
 	HAL_Delay(500); //√’÷Æ—” ±
 
@@ -53,27 +53,27 @@ int main(void)
 	//printf("\r\n=              (C) COPYRIGHT 2015 STMicroelectronics                 =");
     //printf("\r\n=                                                                    =");
 	printf("\r\n=              STM32L0xx Button Application  (Version 1.0.0)         =");
-	printf("\r\n=                                                                    =");
-	printf("\r\n=                                              By  RAK Team          =");
+	//printf("\r\n=                                                                    =");
+	//printf("\r\n=                                              By  RAK Team          =");
 	printf("\r\n======================================================================");
 	printf("\r\n\r\n");
 
 	InitLora();
 
 
-////	HAL_SPI_DeInit(&hspi1);
+//	HAL_SPI_DeInit(&hspi1);
 //	MX_SPI1_Init();
 
 	while(1)
 	{
-
 		 BoardDeInitMcu();
-		 HAL_Delay(1500);
+         HAL_Delay(6000);
+         //HAL_UART_MspDeInit(&huart2);
+         Lp_uart();
 
-		 __HAL_RCC_PWR_CLK_ENABLE();
-		 //printf("Enter stop mode\r\n");
-		 __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_HSI);
-		 HAL_UARTEx_EnableStopMode(&huart2);
+
+
+		 SystemPower_Config();
 		 HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
 
 	}
@@ -138,7 +138,7 @@ void SystemClock_Config(void)
 /* USER CODE BEGIN 4 */
 static void SystemPower_Config(void)
 {
-  GPIO_InitTypeDef GPIO_InitStructure;
+
 
   /* Enable Power Control clock */
   __HAL_RCC_PWR_CLK_ENABLE();
@@ -148,41 +148,9 @@ static void SystemPower_Config(void)
 
   /* Enable the fast wake up from Ultra low power mode */
   HAL_PWREx_EnableFastWakeUp();
+  HAL_UARTEx_EnableStopMode(&huart2);
 
-  /* Select MSI as system clock source after Wake Up from Stop mode */
-  __HAL_RCC_WAKEUPSTOP_CLK_CONFIG(RCC_STOP_WAKEUPCLOCK_HSI);
 
-  /* Enable GPIOs clock */
-  __HAL_RCC_GPIOA_CLK_ENABLE();
-  __HAL_RCC_GPIOB_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOD_CLK_ENABLE();
-  __HAL_RCC_GPIOH_CLK_ENABLE();
-  //__HAL_RCC_GPIOE_CLK_ENABLE();
-
-  /* Configure all GPIO port pins in Analog Input mode (floating input trigger OFF) */
-  /* Note: Debug using ST-Link is not possible during the execution of this   */
-  /*       example because communication between ST-link and the device       */
-  /*       under test is done through UART. All GPIO pins are disabled (set   */
-  /*       to analog input mode) including  UART I/O pins.           */
-  GPIO_InitStructure.Pin = GPIO_PIN_All;
-  GPIO_InitStructure.Mode = GPIO_MODE_ANALOG;
-  GPIO_InitStructure.Pull = GPIO_NOPULL;
-
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStructure);
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
-  HAL_GPIO_Init(GPIOH, &GPIO_InitStructure);
-  //HAL_GPIO_Init(GPIOE, &GPIO_InitStructure);
-
-  /* Disable GPIOs clock */
-  __HAL_RCC_GPIOA_CLK_DISABLE();
-  __HAL_RCC_GPIOB_CLK_DISABLE();
-  __HAL_RCC_GPIOC_CLK_DISABLE();
-  __HAL_RCC_GPIOD_CLK_DISABLE();
-  __HAL_RCC_GPIOH_CLK_DISABLE();
-  //__HAL_RCC_GPIOE_CLK_DISABLE();
 }
 
 /* USER CODE END 4 */
@@ -195,7 +163,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* User can add his own implementation to report the HAL error return state */
-	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
   /* USER CODE END Error_Handler_Debug */
 }
 

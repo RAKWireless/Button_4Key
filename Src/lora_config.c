@@ -352,6 +352,8 @@ void InitLora()
 	  	 mibReq.Param.EnablePublicNetwork = true;
 	  	 LoRaMacMibSetRequestConfirm( &mibReq );
 
+	  	 Radio.Sleep();
+
 
 }
 
@@ -395,6 +397,8 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
 
 	        }
 	    }
+	 Radio.Sleep();
+	 BoardDeInitMcu();
 }
 
 static void McpsIndication( McpsIndication_t *mcpsIndication )
@@ -437,12 +441,14 @@ static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
 	                break;
 	        }
 	    }
-	else
-	{
-		Serial_PutString("Rx timeout\r\n");
-		LED_RED();
-	}
+//	else
+//	{
+//		Serial_PutString("Rx timeout\r\n");
+//		LED_RED();
+//	}
 
+	 Radio.Sleep();
+	 BoardDeInitMcu();
 
 }
 

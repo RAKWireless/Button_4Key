@@ -382,8 +382,9 @@ void RtcRecoverMcuStatus( void )
 
     }
 
-
+    UnLp_uart();
     SystemClock_Config();
+
     //__HAL_RCC_DMA1_CLK_ENABLE();
     //SX126xIoInit();
     MX_SPI1_Init();

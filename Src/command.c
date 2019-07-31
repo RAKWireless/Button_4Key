@@ -17,7 +17,7 @@ static void commmon_read_config(int argc, char *argv[]);
 static void commmon_set_config(int argc, char *argv[]);
 static int parse_args(char* str, char* argv[]);
 static void reset(int argc, char *argv[]);
-static void boot(int argc, char *argv[]);
+void boot(int argc, char *argv[]);
 struct cli_cmds {
     /** The name of the CLI command */
     const char *name;
@@ -210,12 +210,12 @@ static void reset(int argc, char *argv[])
 	HAL_NVIC_SystemReset();
 }
 
-static void boot(int argc, char *argv[])
+void boot(int argc, char *argv[])
 {
 	 uint32_t  Boot_addr = 0x08080700;
 	 //uint32_t  *buffer;
 	 HAL_FLASH_Unlock();
-	 HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, Boot_addr , 0x00001234);
+	 HAL_FLASH_Program(FLASH_TYPEPROGRAM_WORD, Boot_addr , 0x00008888);
 	 HAL_FLASH_Lock();
 //	 *buffer = *(__IO uint32_t  *)Boot_addr;
 //	 printf("%08X\r\n",buffer[0]);

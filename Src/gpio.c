@@ -72,11 +72,19 @@ void MX_GPIO_Init(void)
 
 }
 
+extern SPI_HandleTypeDef hspi1;
 /* USER CODE BEGIN 2 */
 void Key1_Fall()
 {
 
 	printf("KEY1 Fall\r\n");
+	HAL_SPI_DeInit(&hspi1);
+	LED_Init();
+	LED1_State(0);
+	HAL_Delay(300);
+	LED1_State(1);
+	MX_SPI1_Init();
+
 	unsigned char str[1]={0x01};
 	lora_send(1,str);
 
@@ -84,22 +92,40 @@ void Key1_Fall()
 
 void Key2_Fall()
 {
-
 	printf("KEY2 Fall\r\n");
+	HAL_SPI_DeInit(&hspi1);
+	LED_Init();
+	LED2_State(0);
+	HAL_Delay(300);
+	LED2_State(1);
+	MX_SPI1_Init();
+
 	unsigned char str[1]={0x02};
 	lora_send(2,str);
 }
 void Key3_Fall()
 {
-
 	printf("KEY3 Fall\r\n");
+	HAL_SPI_DeInit(&hspi1);
+	LED_Init();
+	LED3_State(0);
+	HAL_Delay(300);
+	LED3_State(1);
+	MX_SPI1_Init();
+
 	unsigned char str[1]={0x03};
 	lora_send(3,str);
 }
 void Key4_Fall()
 {
-
 	printf("KEY4 Fall\r\n");
+	HAL_SPI_DeInit(&hspi1);
+	LED_Init();
+	LED4_State(0);
+	HAL_Delay(300);
+	LED4_State(1);
+	MX_SPI1_Init();
+
 	unsigned char str[1]={0x04};
 	lora_send(4,str);
 }
