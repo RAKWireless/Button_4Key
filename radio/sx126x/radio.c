@@ -1094,7 +1094,7 @@ void RadioIrqProcess( void )
             if( ( RadioEvents != NULL ) && ( RadioEvents->TxDone != NULL ) )
             {
             	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
-            	//HAL_Delay(2000);
+            	//HAL_Delay(3000);
                 RadioEvents->TxDone( );
                 //HAL_Delay(2000);
 

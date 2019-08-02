@@ -61,7 +61,7 @@ extern void CMD_Process( unsigned char* rxChar);
 //SWDCLKµ∆≥£¡¡
 int main(void)
 {
-	SCB->VTOR = FLASH_BASE | 0x2800;//
+//	SCB->VTOR = FLASH_BASE | 0x2800;//
 	BoardInitMcu();
 	//HAL_Delay(500); //√’÷Æ—” ±
 
