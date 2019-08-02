@@ -49,6 +49,11 @@ typedef union BoardVersion_u
     uint32_t Value;
 }BoardVersion_t;
 
+
+
+
+extern volatile unsigned char key_short_down;
+extern volatile unsigned char key_long_down;
 /*!
  * \brief Disable interrupts
  *

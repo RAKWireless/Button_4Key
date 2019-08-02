@@ -363,6 +363,7 @@ void RtcEnterLowPowerStopMode( void )
     }
 }
 
+//extern UART_HandleTypeDef huart2;
 void RtcRecoverMcuStatus( void )
 {
     // PWR_FLAG_WU indicates the Alarm has waken-up the MCU
@@ -382,9 +383,9 @@ void RtcRecoverMcuStatus( void )
 
     }
 
-    UnLp_uart();
+    //UnLp_uart();
     SystemClock_Config();
-
+    //HAL_UART_MspInit(&huart2);
     //__HAL_RCC_DMA1_CLK_ENABLE();
     //SX126xIoInit();
     MX_SPI1_Init();
@@ -739,6 +740,7 @@ static RtcCalendar_t RtcGetCalendar( void )
  */
 void RTC_IRQHandler( void )
 {
+	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
     HAL_RTC_AlarmIRQHandler( &RtcHandle );
     HAL_RTC_DeactivateAlarm( &RtcHandle, RTC_ALARM_A );
     RtcRecoverMcuStatus( );

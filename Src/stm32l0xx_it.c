@@ -28,10 +28,13 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
-extern DMA_HandleTypeDef hdma_usart2_rx;
-extern uint8_t Receive_buff[255];
+//extern DMA_HandleTypeDef hdma_usart2_rx;
+//extern uint8_t Receive_buff[255];
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN TD */
+
+
+//UART_HandleTypeDef UART1_Handler; /
 
 /* USER CODE END TD */
 
@@ -139,51 +142,94 @@ void SysTick_Handler(void)
 
 void USAR_UART_IDLECallback(UART_HandleTypeDef *huart)
 {
-   HAL_UART_DMAStop(&huart2);                                                     //Õ£÷π±æ¥ŒDMA¥´ ‰
-   uint8_t data_length  = USART_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);   //º∆À„Ω” ’µΩµƒ ˝æ›≥§∂»
-   //Receive_buff[data_length]=0;
-//   if(Receive_buff[data_length-1]==0x0A&&Receive_buff[data_length-2]==0x0D)
-//   {
+//   HAL_UART_DMAStop(&huart2);                                                     //ÂÅúÊ≠¢Êú¨Ê¨°DMA‰º†Ëæì
+//   uint8_t data_length  = USART_BUFFER_SIZE - __HAL_DMA_GET_COUNTER(&hdma_usart2_rx);   //ËÆ°ÁÆóÊé•Êî∂Âà∞ÁöÑÊï∞ÊçÆÈïøÂ∫¶
+//   //Receive_buff[data_length]=0;
+////   if(Receive_buff[data_length-1]==0x0A&&Receive_buff[data_length-2]==0x0D)
+////   {
 //	   //printf("Receive Data(length = %d):",data_length);
-//	   Receive_buff[data_length-2] = 0;
-//   }
-//   else
-//   {
-	   Receive_buff[data_length] = 0;
- //  }
-
-
-//   printf("Receive Data(length = %d):",data_length);
+////	   Receive_buff[data_length-2] = 0;
+////   }
+////   else
+////   {
+//	   Receive_buff[data_length] = 0;
+// //  }
 //
-//    HAL_UART_Transmit(&huart2,(uint8_t*)Receive_buff,data_length,0x200);                     //≤‚ ‘∫Ø ˝£∫Ω´Ω” ’µΩµƒ ˝æ›¥Ú”°≥ˆ»•
-//    printf("\r\n");
-
-    if(data_length!=0)
-    CMD_Process(Receive_buff);
-
-    memset(Receive_buff,0,128);                                            //«Â¡„Ω” ’ª∫≥Â«¯
-    data_length = 0;
-    HAL_UART_Receive_DMA(&huart2, Receive_buff, 128);                    //÷ÿ∆Ùø™ ºDMA¥´ ‰ √ø¥Œ255◊÷Ω⁄ ˝æ›
+//
+//   printf("Receive Data(length = %d):",data_length);
+////
+//    HAL_UART_Transmit(&huart2,(uint8_t*)Receive_buff,data_length,0x200);                     //ÊµãËØïÂáΩÊï∞ÔºöÂ∞ÜÊé•Êî∂Âà∞ÁöÑÊï∞ÊçÆÊâìÂç∞Âá∫Âéª
+////    printf("\r\n");
+//
+//    if(data_length!=0)
+//    CMD_Process(Receive_buff);
+//
+//    memset(Receive_buff,0,128);                                            //Ê∏ÖÈõ∂Êé•Êî∂ÁºìÂÜ≤Âå∫
+//    data_length = 0;
+//    HAL_UART_Receive_DMA(&huart2, Receive_buff, 128);                    //ÈáçÂêØÂºÄÂßãDMA‰º†Ëæì ÊØèÊ¨°255Â≠óËäÇÊï∞ÊçÆ
 }
 
 void USER_UART_IRQHandler(UART_HandleTypeDef *huart)
 {
-    if(USART2 == huart2.Instance)                                   //≈–∂œ «∑Ò «¥Æø⁄1
-    {
-        if(RESET != __HAL_UART_GET_FLAG(&huart2, UART_FLAG_IDLE))   //≈–∂œ «∑Ò «ø’œ–÷–∂œ
-        {
-            __HAL_UART_CLEAR_IDLEFLAG(&huart2);                     //«Â≥˛ø’œ–÷–∂œ±Í÷æ£®∑Ò‘Úª·“ª÷±≤ª∂œΩ¯»Î÷–∂œ£©
+//    if(USART2 == huart2.Instance)                                   //Âà§Êñ≠ÊòØÂê¶ÊòØ‰∏≤Âè£1
+//    {
+//        if(RESET != __HAL_UART_GET_FLAG(&huart2, UART_FLAG_IDLE))   //Âà§Êñ≠ÊòØÂê¶ÊòØÁ©∫Èó≤‰∏≠Êñ≠
+//        {
+//            __HAL_UART_CLEAR_IDLEFLAG(&huart2);                     //Ê∏ÖÊ•öÁ©∫Èó≤‰∏≠Êñ≠Ê†áÂøóÔºàÂê¶Âàô‰ºö‰∏ÄÁõ¥‰∏çÊñ≠ËøõÂÖ•‰∏≠Êñ≠Ôºâ
+//
+//            USAR_UART_IDLECallback(huart);                          //Ë∞ÉÁî®‰∏≠Êñ≠Â§ÑÁêÜÂáΩÊï∞
+//        }
+//    }
+}
 
-            USAR_UART_IDLECallback(huart);                          //µ˜”√÷–∂œ¥¶¿Ì∫Ø ˝
-        }
-    }
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+
+		if((USART_RX_STA&0x8000)==0)//
+		{
+			if(USART_RX_STA&0x4000)//
+			{
+				if(aRxBuffer[0]!=0x0a)
+					USART_RX_STA=0;//
+				else
+				{
+					USART_RX_STA|=0x8000;	//
+					//HAL_UART_Transmit(&huart2,(uint8_t*)"A",1,1000);
+
+
+
+				}
+			}
+			else //
+			{
+				if(aRxBuffer[0]==0x0d)
+				{
+					USART_RX_STA|=0x4000;
+					//HAL_UART_Transmit(&huart2,(uint8_t*)"D",1,1000);
+				}
+				else
+				{
+					USART_RX_BUF[USART_RX_STA&0X3FFF]=aRxBuffer[0] ;
+					USART_RX_STA++;
+					if(USART_RX_STA>(200))
+						USART_RX_STA=0;//
+				}
+			}
+		}
+
+
+
+	//printf("%d	%d\r\n",__LINE__,USART_RX_STA);
+
 }
 
 
 
 void USART2_IRQHandler(void)
 {
+	HAL_UART_IRQHandler(&huart2);
 
+	HAL_UART_Receive_IT(&huart2, (unsigned char *)aRxBuffer, 1);
 //	LED_Init();
 //	LED4_State(0);
 //	HAL_Delay(500);
@@ -194,24 +240,69 @@ void USART2_IRQHandler(void)
 //	LED4_State(1);
 //	HAL_UART_MspInit(&huart2);
 
-    HAL_UART_IRQHandler(&huart2);
-    RtcRecoverMcuStatus();
-    USER_UART_IRQHandler(&huart2);
+//    HAL_UART_IRQHandler(&huart2);
+////    RtcRecoverMcuStatus();
+//    //USER_UART_IRQHandler(&huart2);
+//    unsigned int  timeout=0;
+//    unsigned int  maxDelay=0x1FFFF;
+//    timeout=0;
+////  printf("%d\r\n",__LINE__);
+//    while (HAL_UART_GetState(&huart2) != HAL_UART_STATE_READY)//
+//    {
+//
+////    	timeout++;//
+////    	if(timeout>maxDelay) break;
+//    }
+//    timeout=0;
+//    while(HAL_UART_Receive_IT(&huart2, (unsigned char *)aRxBuffer, 1) != HAL_OK)//
+//    {
+////    	timeout++; //
+////    	if(timeout>maxDelay) break;
+////    	printf("%d\r\n",__LINE__);
+//    }
+////    printf("%d\r\n",__LINE__);
+
+//	unsigned char Res;
+//	if((__HAL_UART_GET_FLAG(&huart2,UART_FLAG_RXNE)!=RESET))  //¬Ω√ì√ä√ï√ñ√ê¬∂√è(¬Ω√ì√ä√ï¬µ¬Ω¬µ√Ñ√ä√Ω¬æ√ù¬±√ò√ê√´√ä√á0x0d 0x0a¬Ω√°√é¬≤)
+//	{
+//        HAL_UART_Receive(&huart2,&Res,1,1000);
+//		if((USART_RX_STA&0x8000)==0)//¬Ω√ì√ä√ï√é¬¥√ç√™¬≥√â
+//		{
+//			if(USART_RX_STA&0x4000)//¬Ω√ì√ä√ï¬µ¬Ω√Å√ã0x0d
+//			{
+//				if(Res!=0x0a)USART_RX_STA=0;//¬Ω√ì√ä√ï¬¥√≠√é√≥,√ñ√ò√ê√Ç¬ø¬™√ä¬º
+//				else USART_RX_STA|=0x8000;	//¬Ω√ì√ä√ï√ç√™¬≥√â√Å√ã
+//			}
+//			else //¬ª¬π√É¬ª√ä√ï¬µ¬Ω0X0D
+//			{
+//				if(Res==0x0d)USART_RX_STA|=0x4000;
+//				else
+//				{
+//					USART_RX_BUF[USART_RX_STA&0X3FFF]=Res ;
+//					USART_RX_STA++;
+//					if(USART_RX_STA>(200))
+//						USART_RX_STA=0;//¬Ω√ì√ä√ï√ä√Ω¬æ√ù¬¥√≠√é√≥,√ñ√ò√ê√Ç¬ø¬™√ä¬º¬Ω√ì√ä√ï
+//				}
+//			}
+//		}
+//	}
+//	HAL_UART_IRQHandler(&huart2);
+
 
     /* USER CODE END USART1_IRQn 1 */
 }
 
 
-void DMA1_Channel4_5_6_7_IRQHandler(void)
-{
-  /* USER CODE BEGIN DMA1_Channel4_5_6_7_IRQn 0 */
-
-  /* USER CODE END DMA1_Channel4_5_6_7_IRQn 0 */
-  HAL_DMA_IRQHandler(&hdma_usart2_rx);
-  /* USER CODE BEGIN DMA1_Channel4_5_6_7_IRQn 1 */
-
-  /* USER CODE END DMA1_Channel4_5_6_7_IRQn 1 */
-}
+//void DMA1_Channel4_5_6_7_IRQHandler(void)
+//{
+//  /* USER CODE BEGIN DMA1_Channel4_5_6_7_IRQn 0 */
+//
+//  /* USER CODE END DMA1_Channel4_5_6_7_IRQn 0 */
+//  HAL_DMA_IRQHandler(&hdma_usart2_rx);
+//  /* USER CODE BEGIN DMA1_Channel4_5_6_7_IRQn 1 */
+//
+//  /* USER CODE END DMA1_Channel4_5_6_7_IRQn 1 */
+//}
 /******************************************************************************/
 /* STM32L0xx Peripheral Interrupt Handlers                                    */
 /* Add here the Interrupt Handlers for the used peripherals.                  */

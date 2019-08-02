@@ -364,7 +364,7 @@ void InitLora()
  */
 static void MlmeIndication( MlmeIndication_t *mlmeIndication )
 {
-	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+//	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
 }
 
 static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
@@ -403,6 +403,36 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
 
 static void McpsIndication( McpsIndication_t *mcpsIndication )
 {
+	 switch( mcpsIndication->McpsIndication )
+	 	 {
+	        case MCPS_UNCONFIRMED:
+	        {
+
+	//        	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+	            break;
+	        }
+	        case MCPS_CONFIRMED:
+	        {
+	//        	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+	            break;
+	        }
+	        case MCPS_PROPRIETARY:
+	        {
+	            break;
+	        }
+	        case MCPS_MULTICAST:
+	        {
+	            break;
+	        }
+	        default:
+	            break;
+	    }
+
+//	 printf("mcpsIndication->Rssi	%d\r\n",mcpsIndication->Rssi);
+
+
+	//Serial_PutString("MCPS confirmed succseeful\r\n");
+	//LED_Indication();
 	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
 
 }
@@ -418,6 +448,7 @@ static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
 	        {
 	            case MCPS_UNCONFIRMED:
 	            {
+
 	                // Check Datarate
 	                // Check TxPower
 	                break;
@@ -426,6 +457,8 @@ static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
 	            {
 
 	            	Serial_PutString("MCPS confirmed succseeful\r\n");
+	            	LED_Indication();
+
 	            	//while(1);
 	                // Check Datarate
 	                // Check TxPower
@@ -441,14 +474,21 @@ static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
 	                break;
 	        }
 	    }
-//	else
-//	{
-//		Serial_PutString("Rx timeout\r\n");
-//		LED_RED();
-//	}
+	else
+	{
+		Serial_PutString("Rx confirmed error\r\n");
+		LED_RED();
+	}
 
-	 Radio.Sleep();
-	 BoardDeInitMcu();
+//	printf("NbRetries %d\r\n",mcpsConfirm->NbRetries);
+//	printf("Status %d\r\n",mcpsConfirm->Status);
+//	printf("McpsRequest %d\r\n",mcpsConfirm->McpsRequest);
+//	printf("AckReceived %d\r\n",mcpsConfirm->AckReceived);
+//	printf("TxPower %d\r\n",mcpsConfirm->TxPower);
+//	printf("Datarate %d\r\n",mcpsConfirm->Datarate);
+
+	Radio.Sleep();
+	BoardDeInitMcu();
 
 }
 
@@ -590,6 +630,7 @@ void lora_send(int port,const unsigned char* Appdata)
 	mcpsReq.Req.Unconfirmed.fBuffer = Appdata;
 	mcpsReq.Req.Unconfirmed.fBufferSize = 1;
 	mcpsReq.Req.Unconfirmed.Datarate = DR_1;
+	mcpsReq.Req.Confirmed.NbTrials=8;
 	LoRaMacStatus_t state;
 	state =LoRaMacMcpsRequest( &mcpsReq ) ;
 	if( state!= LORAMAC_STATUS_OK )

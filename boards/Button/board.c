@@ -52,6 +52,63 @@ Gpio_t Led3;
 Gpio_t Led4;
 Gpio_t Led5;
 
+
+TimerEvent_t Key1_timer;
+volatile unsigned int key_holdon_ms=0;
+volatile unsigned char key_fall_flag=0;
+volatile unsigned char key_short_down=0;
+volatile unsigned char key_long_down=0;
+
+
+
+void Key1_timer_Callback()
+{
+	if(key_fall_flag==1)
+	{
+		if(HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9)==0)
+		{
+			if(key_holdon_ms <= 1500)
+			{
+				key_holdon_ms+=100;
+				TimerStart(&Key1_timer);     //开启按键定时器
+
+			}
+			else //按键按下到2000ms就判断长按时间成立，生成长按标志
+			{
+				key_holdon_ms = 0;
+				key_short_down=0;//清短按键标志
+				key_long_down = 1;//长按键标志置位
+				key_fall_flag = 0;//清按键按下标志
+				TimerStop(&Key1_timer);
+				key_holdon_ms=0;
+
+			}
+		}
+		else
+		{
+//
+				key_holdon_ms=0;
+				key_short_down=1;
+				key_long_down =0;
+				key_fall_flag=0;
+				TimerStop(&Key1_timer);
+				key_holdon_ms=0;
+
+
+
+		}
+	}
+
+	//printf("key_holdon_ms	%dms\r\n",key_holdon_ms);
+
+
+
+
+
+}
+
+
+//}
 /*
  * MCU objects
  */
@@ -152,12 +209,14 @@ void BoardInitMcu( void )
 		LED_ALL_OFF();
 		MX_USART2_UART_Init();
 
-
-
 		MX_SPI1_Init();
 		SX126xIoInit();
 		KeyCallbackInit();
 		RtcInit();
+
+		TimerInit(&Key1_timer,Key1_timer_Callback);
+		TimerSetValue(&Key1_timer,200);
+//		TimerStart(&Key1_timer);
 		FLASH_Read(FLASH_USER_START_ADDR, &lora_config, sizeof( lora_config_t));  //注意第二个参数的指针
 
 //	    HAL_DBGMCU_EnableDBGSleepMode( );
@@ -167,6 +226,10 @@ void BoardInitMcu( void )
 
 
 }
+
+
+
+
 
 void LED_Cycle()
 {
@@ -227,6 +290,18 @@ void LED_RED()
 
 }
 
+void LED_Indication()
+{
+	GpioInit( &Led4, PA_14, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+	LED4_State(0);
+	HAL_Delay(150);
+	LED4_State(1);
+	HAL_Delay(150);
+	LED4_State(0);
+	HAL_Delay(150);
+	LED4_State(1);
+}
+
 
 void LED1_State(uint32_t state)
 {
@@ -266,6 +341,7 @@ void BoardResetMcu( void )
 
 void BoardDeInitMcu( void )
 {
+
 
 	HAL_SPI_DeInit(&hspi1);
 	LED_Init();

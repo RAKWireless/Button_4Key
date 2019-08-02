@@ -41,12 +41,29 @@
 #include "lora_config.h"
 #include "gpio-board.h"
 
+volatile bool Lower_Power = 1 ;
+//extern unsigned char USART_RX_STA;
+//bool temp;
+unsigned char len;
+
+extern void CMD_Process( unsigned char* rxChar);
+
+//TimerEvent_t Led_Red;
+
+//void Led_Red_Callback()
+//{
+//
+//
+//	LED5_State(~temp);
+//	TimerStart(&Led_Red);
+//}
+
 //SWDCLK灯常亮
 int main(void)
 {
 	SCB->VTOR = FLASH_BASE | 0x2800;//
 	BoardInitMcu();
-	HAL_Delay(500); //谜之延时
+	//HAL_Delay(500); //谜之延时
 
 
 	printf("\r\n======================================================================");
@@ -61,21 +78,74 @@ int main(void)
 	InitLora();
 
 
-//	HAL_SPI_DeInit(&hspi1);
-//	MX_SPI1_Init();
+
+
 
 	while(1)
 	{
+
+		if(key_long_down == 1)
+		{
+			key_long_down=0;
+			Lower_Power=(!Lower_Power);
+			if(!Lower_Power)
+			MX_USART2_UART_Init();
+			printf("Lower_Power mode %d\r\n",Lower_Power);
+		}
+		if(key_short_down == 1)
+		{
+			key_short_down=0;
+			printf("KEY1 Fall\r\n");
+			HAL_SPI_DeInit(&hspi1);
+			LED_Init();
+			LED1_State(0);
+			HAL_Delay(300);
+			LED1_State(1);
+			MX_SPI1_Init();
+
+			unsigned char str[1]={0x01};
+			lora_send(1,str);
+
+		}
+
+		if(USART_RX_STA&0x8000)
+		{
+			HAL_SPI_DeInit(&hspi1);
+			MX_SPI1_Init();
+
+			len=USART_RX_STA&0x3fff;//
+			USART_RX_BUF[len]=0;
+			CMD_Process(USART_RX_BUF);
+			memset(USART_RX_BUF,0,200);
+
+			//HAL_UART_Transmit(&huart2,(uint8_t*)USART_RX_BUF,len,1000);	//
+			//while(__HAL_UART_GET_FLAG(&huart2,UART_FLAG_TC)!=SET);
+			//printf("\r\n\r\n");//
+			USART_RX_STA=0;
+		}
+
+       //HAL_UART_MspDeInit(&huart2);
+       //Lp_uart();
+		if(Lower_Power==true)
+		{
+//		 LED5_State(1);
+//		 TimerStop(&Led_Red);
+//		 HAL_Delay(3000);
+//		 HAL_UART_MspDeInit(&huart2);   //关闭串口
+		 HAL_UART_DeInit(&huart2);
+		 //UnLp_uart();
 		 BoardDeInitMcu();
-         HAL_Delay(6000);
-         //HAL_UART_MspDeInit(&huart2);
-         Lp_uart();
-
-
-
+		 //HAL_Delay(5000);
 		 SystemPower_Config();
 		 HAL_PWR_EnterSTOPMode(PWR_LOWPOWERREGULATOR_ON, PWR_STOPENTRY_WFI);
 
+		}
+		else
+		{
+			LED5_State(0);
+
+			//TimerStart(&Led_Red);
+		}
 	}
   /* USER CODE END 3 */
 }
@@ -148,7 +218,7 @@ static void SystemPower_Config(void)
 
   /* Enable the fast wake up from Ultra low power mode */
   HAL_PWREx_EnableFastWakeUp();
-  HAL_UARTEx_EnableStopMode(&huart2);
+  //HAL_UARTEx_EnableStopMode(&huart2);
 
 
 }

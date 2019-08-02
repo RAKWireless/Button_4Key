@@ -323,6 +323,8 @@ void SX126xSetStopRxTimerOnPreambleDetect( bool enable )
 
 void SX126xSetLoRaSymbNumTimeout( uint8_t SymbNum )
 {
+	//printf("%s	%s	%d	%d\r\n",__FILE__,__func__,__LINE__,SymbNum);
+
     SX126xWriteCommand( RADIO_SET_LORASYMBTIMEOUT, &SymbNum, 1 );
 }
 

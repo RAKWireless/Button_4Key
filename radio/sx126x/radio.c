@@ -1093,8 +1093,10 @@ void RadioIrqProcess( void )
             TimerStop( &TxTimeoutTimer );
             if( ( RadioEvents != NULL ) && ( RadioEvents->TxDone != NULL ) )
             {
-            	//printf("RadioEvents->TxDone( )\r\n");
+            	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+            	//HAL_Delay(2000);
                 RadioEvents->TxDone( );
+                //HAL_Delay(2000);
 
             }
         }
@@ -1102,7 +1104,7 @@ void RadioIrqProcess( void )
         if( ( irqRegs & IRQ_RX_DONE ) == IRQ_RX_DONE )
         {
             uint8_t size;
-//            printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+           // printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
             TimerStop( &RxTimeoutTimer );
             SX126xGetPayload( RadioRxPayload, &size , 255 );
             SX126xGetPacketStatus( &RadioPktStatus );
@@ -1114,6 +1116,7 @@ void RadioIrqProcess( void )
 
         if( ( irqRegs & IRQ_CRC_ERROR ) == IRQ_CRC_ERROR )
         {
+        	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
             if( ( RadioEvents != NULL ) && ( RadioEvents->RxError ) )
             {
                 RadioEvents->RxError( );
@@ -1122,6 +1125,7 @@ void RadioIrqProcess( void )
 
         if( ( irqRegs & IRQ_CAD_DONE ) == IRQ_CAD_DONE )
         {
+        	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
             if( ( RadioEvents != NULL ) && ( RadioEvents->CadDone != NULL ) )
             {
                 RadioEvents->CadDone( ( ( irqRegs & IRQ_CAD_ACTIVITY_DETECTED ) == IRQ_CAD_ACTIVITY_DETECTED ) );
@@ -1130,6 +1134,11 @@ void RadioIrqProcess( void )
 
         if( ( irqRegs & IRQ_RX_TX_TIMEOUT ) == IRQ_RX_TX_TIMEOUT )
         {
+        		//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+
+
+        	// printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+
             if( SX126xGetOperatingMode( ) == MODE_TX )
             {
                 TimerStop( &TxTimeoutTimer );
@@ -1151,21 +1160,25 @@ void RadioIrqProcess( void )
 
         if( ( irqRegs & IRQ_PREAMBLE_DETECTED ) == IRQ_PREAMBLE_DETECTED )
         {
+        	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
             //__NOP( );
         }
 
         if( ( irqRegs & IRQ_SYNCWORD_VALID ) == IRQ_SYNCWORD_VALID )
         {
+        	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
             //__NOP( );
         }
 
         if( ( irqRegs & IRQ_HEADER_VALID ) == IRQ_HEADER_VALID )
         {
+        	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
             //__NOP( );
         }
 
         if( ( irqRegs & IRQ_HEADER_ERROR ) == IRQ_HEADER_ERROR )
         {
+        	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
             TimerStop( &RxTimeoutTimer );
             if( ( RadioEvents != NULL ) && ( RadioEvents->RxTimeout != NULL ) )
             {

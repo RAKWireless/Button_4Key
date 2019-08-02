@@ -239,7 +239,7 @@ uint8_t SX126xGetPaSelect( uint32_t channel )
 
 void SX126xAntSwOn( void )  //TX
 {
-    GpioInit( &AntPow, RADIO_ANT_SWITCH_POWER, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 0 );
+    GpioInit( &AntPow, RADIO_ANT_SWITCH_POWER, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 0 );    //  0 1 ’˝»∑≈‰÷√
 	GpioInit( &radio_dio2, RADIO_DIO_2, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_DOWN, 1 );
 }
 

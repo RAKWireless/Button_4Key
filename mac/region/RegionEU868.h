@@ -55,7 +55,7 @@
 /*!
  * Minimal datarate that can be used by the node
  */
-#define EU868_TX_MIN_DATARATE                       DR_0
+#define EU868_TX_MIN_DATARATE                       DR_1 //有改动    //默认是0
 
 /*!
  * Maximal datarate that can be used by the node
@@ -75,7 +75,7 @@
 /*!
  * Default datarate used by the node
  */
-#define EU868_DEFAULT_DATARATE                      DR_0
+#define EU868_DEFAULT_DATARATE                      DR_1  //有改动
 
 /*!
  * Minimal Rx1 receive datarate offset

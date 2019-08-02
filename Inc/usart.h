@@ -25,7 +25,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-
+#include "stdint.h"
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
@@ -41,6 +41,13 @@ void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN Prototypes */
 
 /* USER CODE END Prototypes */
+
+extern unsigned char USART_RX_BUF[200];
+
+unsigned char Rx_Flag;
+extern volatile uint16_t USART_RX_STA;
+
+extern unsigned char aRxBuffer[1];
 
 #ifdef __cplusplus
 }
