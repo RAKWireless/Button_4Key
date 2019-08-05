@@ -284,6 +284,7 @@ static int handle_lora_config(int argc , char * argv[],cfg_op op)
 static int dev_eui(int argc , char * argv[],cfg_op op)
 {
 
+
 	if(op==CFG_READ)
 	{
 		printf("dev_eui:%02X%02X%02X%02X%02X%02X%02X%02X\r\n",lora_config.dev_eui[0],lora_config.dev_eui[1],lora_config.dev_eui[2],lora_config.dev_eui[3],lora_config.dev_eui[4],
@@ -291,12 +292,19 @@ static int dev_eui(int argc , char * argv[],cfg_op op)
 	}
 	else
 	{
+		if(strlen(argv[1])!=16)
+		{
+
+			printf("AT CMD parameters error.\n");
+		}
+		else
+		{
 		AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.dev_eui, strlen(argv[1]));
 		Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
 		printf("ok\r\n");
 //		printf("app_eui:%02X %02X %02X %02X %02X %02X %02X %02X\r\n",lora_config.app_eui[0],lora_config.app_eui[1],lora_config.app_eui[2],lora_config.app_eui[3],lora_config.app_eui[4],
 //		lora_config.app_eui[5],lora_config.app_eui[6],lora_config.app_eui[7]);
-
+		}
 
 	}
 
@@ -314,12 +322,19 @@ static int app_eui(int argc , char * argv[],cfg_op op)
 	}
 	else
 	{
+		if(strlen(argv[1])!=16)
+		{
+
+					printf("AT CMD parameters error.\n");
+		}
+		else
+		{
 		AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.app_eui, strlen(argv[1]));
 		Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
 		printf("ok\r\n");
 //		printf("app_eui:%02X %02X %02X %02X %02X %02X %02X %02X\r\n",lora_config.app_eui[0],lora_config.app_eui[1],lora_config.app_eui[2],lora_config.app_eui[3],lora_config.app_eui[4],
 //		lora_config.app_eui[5],lora_config.app_eui[6],lora_config.app_eui[7]);
-
+		}
 
 	}
 
@@ -691,10 +706,18 @@ static int app_key(int argc , char * argv[],cfg_op op)
 		}
 		else
 		{
+			if(strlen(argv[1])!=32)
+					{
+
+						printf("AT CMD parameters error.\n");
+					}
+			else
+			{
 			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.app_key, strlen(argv[1]));
 			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
 
 			printf("ok\r\n");
+			}
 		}
 
 		return 0;
@@ -716,10 +739,18 @@ static int apps_key(int argc , char * argv[],cfg_op op)
 		}
 		else
 		{
+			if(strlen(argv[1])!=32)
+					{
+
+						printf("AT CMD parameters error.\n");
+					}
+			else
+			{
 			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.apps_key, strlen(argv[1]));
 
 			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
 			printf("ok\r\n");
+			}
 		}
 
 		return 0;
@@ -740,10 +771,18 @@ static int nwks_key(int argc , char * argv[],cfg_op op)
 		}
 		else
 		{
+			if(strlen(argv[1])!=32)
+					{
+
+						printf("AT CMD parameters error.\n");
+					}
+			else
+			{
 			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.nwks_key, strlen(argv[1]));
 
 			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
 			printf("ok\r\n");
+			}
 		}
 
 		return 0;
@@ -765,10 +804,18 @@ static int dev_addr(int argc , char * argv[],cfg_op op)
 		}
 		else
 		{
+			if(strlen(argv[1])!=8)
+					{
+
+						printf("AT CMD parameters error.\n");
+					}
+			else
+			{
 			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.dev_addr, strlen(argv[1]));
 
 			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
 			printf("ok\r\n");
+			}
 		}
 
 		return 0;
