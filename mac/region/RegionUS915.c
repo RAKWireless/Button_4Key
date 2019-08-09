@@ -315,11 +315,11 @@ void RegionUS915InitDefaults( InitType_t type )
             }
 
             // ChannelsMask
-            ChannelsDefaultMask[0] = 0xFFFF;
-            ChannelsDefaultMask[1] = 0xFFFF;
-            ChannelsDefaultMask[2] = 0xFFFF;
-            ChannelsDefaultMask[3] = 0xFFFF;
-            ChannelsDefaultMask[4] = 0x00FF;
+            ChannelsDefaultMask[0] = 0xFF00;
+            ChannelsDefaultMask[1] = 0x0000;
+            ChannelsDefaultMask[2] = 0x0000;
+            ChannelsDefaultMask[3] = 0x0000;
+            ChannelsDefaultMask[4] = 0x0000;
             ChannelsDefaultMask[5] = 0x0000;
 
             // Copy channels default mask
@@ -820,11 +820,13 @@ LoRaMacStatus_t RegionUS915NextChannel( NextChanParams_t* nextChanParams, uint8_
         {
             // Delay transmission due to AggregatedTimeOff or to a band time off
             *time = nextTxDelay;
-            return LORAMAC_STATUS_DUTYCYCLE_RESTRICTED;
+           // return LORAMAC_STATUS_DUTYCYCLE_RESTRICTED;
+            return LORAMAC_STATUS_OK;    //人为改动
         }
         // Datarate not supported by any channel
         *time = 0;
         return LORAMAC_STATUS_NO_CHANNEL_FOUND;
+
     }
 }
 

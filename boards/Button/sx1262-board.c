@@ -225,21 +225,17 @@ void SX126xSetRfTxPower( int8_t power )
 
 uint8_t SX126xGetPaSelect( uint32_t channel )
 {
-    if( GpioRead( &DeviceSel ) == 1 )
-    {
-        return SX1261;
-    }
-    else
-    {
+
+
         return SX1262;
-    }
+
 }
 
 
 
 void SX126xAntSwOn( void )  //TX
 {
-    GpioInit( &AntPow, RADIO_ANT_SWITCH_POWER, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 0 );    //  0 1 正确配置
+    GpioInit( &AntPow, RADIO_ANT_SWITCH_POWER, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 0 );    //  0 1 正确配置    两个原理图刚好收发相反
 	GpioInit( &radio_dio2, RADIO_DIO_2, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_DOWN, 1 );
 }
 
@@ -248,6 +244,13 @@ void SX126xAntSwOff( void ) //RX
     GpioInit( &AntPow, RADIO_ANT_SWITCH_POWER, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_DOWN, 1 );
 	GpioInit( &radio_dio2, RADIO_DIO_2, PIN_OUTPUT, PIN_PUSH_PULL, PIN_PULL_UP, 0 );
 }
+
+void SX126xAntDeinit( void ) //
+{
+    GpioInit( &AntPow, RADIO_ANT_SWITCH_POWER, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+	GpioInit( &radio_dio2, RADIO_DIO_2, PIN_ANALOGIC, PIN_PUSH_PULL, PIN_NO_PULL, 1 );
+}
+
 bool SX126xCheckRfFrequency( uint32_t frequency )
 {
     // Implement check. Currently all frequencies are supported

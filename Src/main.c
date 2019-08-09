@@ -134,6 +134,7 @@ int main(void)
 //		 HAL_UART_MspDeInit(&huart2);   //¹Ø±Õ´®¿Ú
 		 HAL_UART_DeInit(&huart2);
 		 //UnLp_uart();
+
 		 BoardDeInitMcu();
 		 //HAL_Delay(5000);
 		 SystemPower_Config();

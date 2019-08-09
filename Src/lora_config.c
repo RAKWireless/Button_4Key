@@ -367,7 +367,12 @@ void InitLora()
 	  	 mibReq.Param.EnablePublicNetwork = true;
 	  	 LoRaMacMibSetRequestConfirm( &mibReq );
 
-	  	 Radio.Sleep();
+	  	 int argc;
+	  	 char* argv[1];
+
+	  	 lora_join(argc,argv);
+
+	  	 //Radio.Sleep();
 
 
 }
@@ -392,7 +397,7 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
 	            if( mlmeConfirm->Status == LORAMAC_EVENT_INFO_STATUS_OK )
 	            {
 	                // Status is OK, node has joined the network
-	            	printf("Status is OK, node has joined the network\r\n");
+	            	Serial_PutString("Status is OK, node has joined the network\r\n");
 //	            	LED_Init();
 //	            	LED4_State(0);
 //	            	HAL_Delay(500);
@@ -405,7 +410,7 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
 	            }
 	            else
 	            {
-	            	printf("Join was not successful. Try to join again\r\n");
+	            	Serial_PutString("Join was not successful. Try to join again\r\n");
 
 	            }
 	            break;
@@ -414,6 +419,7 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
 	    }
 	 Radio.Sleep();
 	 BoardDeInitMcu();
+	 SX126xAntDeinit( );
 }
 
 static void McpsIndication( McpsIndication_t *mcpsIndication )
@@ -443,7 +449,7 @@ static void McpsIndication( McpsIndication_t *mcpsIndication )
 	            break;
 	    }
 
-//	 printf("mcpsIndication->Rssi	%d\r\n",mcpsIndication->Rssi);
+	 printf("mcpsIndication->Rssi	%d\r\n",mcpsIndication->Rssi);
 
 
 	//Serial_PutString("MCPS confirmed succseeful\r\n");
@@ -504,6 +510,7 @@ static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
 
 	Radio.Sleep();
 	BoardDeInitMcu();
+	SX126xAntDeinit( );
 
 }
 
@@ -633,6 +640,9 @@ else
              }
 
              printf("ok\r\n");
+             Radio.Sleep();
+             BoardDeInitMcu();
+             SX126xAntDeinit( );
  }
 }
 

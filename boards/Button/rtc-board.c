@@ -385,6 +385,7 @@ void RtcRecoverMcuStatus( void )
 
     //UnLp_uart();
     SystemClock_Config();
+    MX_USART2_UART_Init();
     //HAL_UART_MspInit(&huart2);
     //__HAL_RCC_DMA1_CLK_ENABLE();
     //SX126xIoInit();
