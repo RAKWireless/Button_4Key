@@ -357,7 +357,7 @@ void InitLora()
 	  	LoRaMacPrimitives.MacMlmeConfirm = MlmeConfirm;
 	  	LoRaMacPrimitives.MacMlmeIndication = MlmeIndication;
 	  //LoRaMacCallbacks.GetBatteryLevel = BoardGetBatteryLevel;
-	  	LoRaMacInitialization( &LoRaMacPrimitives, &LoRaMacCallbacks, LORAMAC_REGION_EU868 );
+	  	LoRaMacInitialization( &LoRaMacPrimitives, &LoRaMacCallbacks, LORAMAC_REGION_CN470 );
 
 	  	 mibReq.Type = MIB_ADR;     //ADR 没有问题
 	  	 mibReq.Param.AdrEnable = 1;
@@ -651,11 +651,15 @@ else
 void lora_send(int port,const unsigned char* Appdata)
 {
 	mcpsReq.Type = MCPS_CONFIRMED;
-	mcpsReq.Req.Unconfirmed.fPort = port;
-	mcpsReq.Req.Unconfirmed.fBuffer = Appdata;
-	mcpsReq.Req.Unconfirmed.fBufferSize = 1;
-	mcpsReq.Req.Unconfirmed.Datarate = DR_1;
+	mcpsReq.Req.Confirmed.fPort = port;
+	mcpsReq.Req.Confirmed.fBuffer = Appdata;
+	mcpsReq.Req.Confirmed.fBufferSize = 1;
+	mcpsReq.Req.Confirmed.Datarate = DR_1;
 	mcpsReq.Req.Confirmed.NbTrials=8;
+
+
+
+
 	LoRaMacStatus_t state;
 	state =LoRaMacMcpsRequest( &mcpsReq ) ;
 	if( state!= LORAMAC_STATUS_OK )
