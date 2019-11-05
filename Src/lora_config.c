@@ -357,7 +357,7 @@ void InitLora()
 	  	LoRaMacPrimitives.MacMlmeConfirm = MlmeConfirm;
 	  	LoRaMacPrimitives.MacMlmeIndication = MlmeIndication;
 	  //LoRaMacCallbacks.GetBatteryLevel = BoardGetBatteryLevel;
-	  	LoRaMacInitialization( &LoRaMacPrimitives, &LoRaMacCallbacks, LORAMAC_REGION_CN470 );
+	  	LoRaMacInitialization( &LoRaMacPrimitives, &LoRaMacCallbacks, LORAMAC_REGION_EU868 );
 
 	  	 mibReq.Type = MIB_ADR;     //ADR 没有问题
 	  	 mibReq.Param.AdrEnable = 1;

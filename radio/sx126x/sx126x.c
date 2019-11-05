@@ -461,7 +461,7 @@ void SX126xSetTxParams( int8_t power, RadioRampTimes_t rampTime )
 {
     uint8_t buf[2];
 
-    power=22;   //强行设置发射功率
+    power=21;   //强行设置发射功率
 
     if( SX126xGetPaSelect( 0 ) == SX1261 )
     {

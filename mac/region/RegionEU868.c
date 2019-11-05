@@ -921,8 +921,8 @@ LoRaMacStatus_t RegionEU868NextChannel( NextChanParams_t* nextChanParams, uint8_
         {
             // Delay transmission due to AggregatedTimeOff or to a band time off
             *time = nextTxDelay;   //人为改动
-            //return LORAMAC_STATUS_DUTYCYCLE_RESTRICTED;
-            return LORAMAC_STATUS_OK;
+            return LORAMAC_STATUS_DUTYCYCLE_RESTRICTED;
+            //return LORAMAC_STATUS_OK;
         }
         // Datarate not supported by any channel, restore defaults
         ChannelsMask[0] |= LC( 1 ) + LC( 2 ) + LC( 3 );

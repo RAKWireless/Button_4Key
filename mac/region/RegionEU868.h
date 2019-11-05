@@ -65,7 +65,7 @@
 /*!
  * Minimal datarate that can be used by the node
  */
-#define EU868_RX_MIN_DATARATE                       DR_0
+#define EU868_RX_MIN_DATARATE                       DR_1
 
 /*!
  * Maximal datarate that can be used by the node
@@ -130,7 +130,7 @@
 /*!
  * Enabled or disabled the duty cycle
  */
-#define EU868_DUTY_CYCLE_ENABLED                    1
+#define EU868_DUTY_CYCLE_ENABLED                    0
 
 /*!
  * Maximum RX window duration

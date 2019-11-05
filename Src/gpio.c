@@ -24,7 +24,8 @@
 #include "timer.h"
 #include "board.h"
 /* USER CODE BEGIN 0 */
-extern  unsigned char key_fall_flag;  //按键按下标志位
+extern  unsigned char key1_fall_flag;  //按键按下标志位
+extern  unsigned char key2_fall_flag;
 
 
 /* USER CODE END 0 */
@@ -83,7 +84,7 @@ extern SPI_HandleTypeDef hspi1;
 void Key1_Fall()
 {
 	//merStart(&Key1_timer);     //开启按键定时器
-	key_fall_flag=1;
+	key1_fall_flag=1;
 	//L_Delay(100;
 	TimerStart(&Key1_timer);     //开启按键定时器
 
@@ -109,16 +110,20 @@ void Key1_Fall()
 
 void Key2_Fall()
 {
-	printf("KEY2 Fall\r\n");
-	HAL_SPI_DeInit(&hspi1);
-	LED_Init();
-	LED2_State(0);
-	HAL_Delay(300);
-	LED2_State(1);
-	MX_SPI1_Init();
 
-	unsigned char str[1]={0x02};
-	lora_send(2,str);
+	key2_fall_flag=1;
+	//L_Delay(100;
+	TimerStart(&Key1_timer);     //开启按键定时器
+//	printf("KEY2 Fall\r\n");
+//	HAL_SPI_DeInit(&hspi1);
+//	LED_Init();
+//	LED2_State(0);
+//	HAL_Delay(300);
+//	LED2_State(1);
+//	MX_SPI1_Init();
+//
+//	unsigned char str[1]={0x02};
+//	lora_send(2,str);
 }
 void Key3_Fall()
 {

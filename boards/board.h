@@ -54,6 +54,9 @@ typedef union BoardVersion_u
 
 extern volatile unsigned char key_short_down;
 extern volatile unsigned char key_long_down;
+
+extern volatile unsigned char key2_short_down;
+extern volatile unsigned char key2_long_down;
 /*!
  * \brief Disable interrupts
  *

@@ -66,13 +66,13 @@ int main(void)
 	//HAL_Delay(500); //√’÷Æ—” ±
 
 
-	printf("\r\n======================================================================");
-	//printf("\r\n=              (C) COPYRIGHT 2015 STMicroelectronics                 =");
-    //printf("\r\n=                                                                    =");
-	printf("\r\n=              STM32L0xx Button Application  (Version 1.0.0)         =");
-	//printf("\r\n=                                                                    =");
-	//printf("\r\n=                                              By  RAK Team          =");
-	printf("\r\n======================================================================");
+//	printf("\r\n======================================================================");
+//	//printf("\r\n=              (C) COPYRIGHT 2015 STMicroelectronics                 =");
+//    //printf("\r\n=                                                                    =");
+	printf("\r\n=              STM32L0xx Button Application  (Version 1.0.1)         =");
+//	//printf("\r\n=                                                                    =");
+//	//printf("\r\n=                                              By  RAK Team          =");
+//	printf("\r\n======================================================================");
 	printf("\r\n\r\n");
 
 	InitLora();
@@ -107,6 +107,33 @@ int main(void)
 			lora_send(1,str);
 
 		}
+
+		if(key2_long_down == 1)
+		{
+			key2_long_down=0;
+			HAL_NVIC_SystemReset();
+
+		}
+		if(key2_short_down == 1)
+		{
+			key2_short_down=0;
+			printf("KEY2 Fall\r\n");
+			HAL_SPI_DeInit(&hspi1);
+			LED_Init();
+			LED2_State(0);
+			HAL_Delay(300);
+			LED2_State(1);
+			MX_SPI1_Init();
+
+			unsigned char str[1]={0x02};
+			lora_send(2,str);
+
+		}
+
+
+
+
+
 
 		if(USART_RX_STA&0x8000)
 		{

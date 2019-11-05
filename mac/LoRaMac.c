@@ -1337,7 +1337,7 @@ static void OnMacStateCheckTimerEvent( void )
         if( ( AckTimeoutRetry == true ) && ( ( LoRaMacState & LORAMAC_TX_DELAYED ) == 0 ) )
         {// Retransmissions procedure for confirmed uplinks
 
-        	printf("AckTimeoutRetry:%d, LoRaMacState:%d, AckTimeoutRetriesCounter:%d, AckTimeoutRetries:%d\n",AckTimeoutRetry,LoRaMacState,AckTimeoutRetriesCounter,AckTimeoutRetries);
+        	//printf("AckTimeoutRetry:%d, LoRaMacState:%d, AckTimeoutRetriesCounter:%d, AckTimeoutRetries:%d\n",AckTimeoutRetry,LoRaMacState,AckTimeoutRetriesCounter,AckTimeoutRetries);
 
             AckTimeoutRetry = false;
             if( ( AckTimeoutRetriesCounter < AckTimeoutRetries ) && ( AckTimeoutRetriesCounter <= MAX_ACK_RETRIES ) )

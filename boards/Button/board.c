@@ -54,16 +54,24 @@ Gpio_t Led5;
 
 
 TimerEvent_t Key1_timer;
+TimerEvent_t Key2_timer;
+
+
 volatile unsigned int key_holdon_ms=0;
-volatile unsigned char key_fall_flag=0;
+volatile unsigned char key1_fall_flag=0;
+volatile unsigned char key2_fall_flag=0;
+
 volatile unsigned char key_short_down=0;
 volatile unsigned char key_long_down=0;
+
+volatile unsigned char key2_short_down=0;
+volatile unsigned char key2_long_down=0;
 
 
 
 void Key1_timer_Callback()
 {
-	if(key_fall_flag==1)
+	if(key1_fall_flag==1)
 	{
 		if(HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_9)==0)
 		{
@@ -78,7 +86,7 @@ void Key1_timer_Callback()
 				key_holdon_ms = 0;
 				key_short_down=0;//清短按键标志
 				key_long_down = 1;//长按键标志置位
-				key_fall_flag = 0;//清按键按下标志
+				key1_fall_flag = 0;//清按键按下标志
 				TimerStop(&Key1_timer);
 				key_holdon_ms=0;
 
@@ -90,7 +98,45 @@ void Key1_timer_Callback()
 				key_holdon_ms=0;
 				key_short_down=1;
 				key_long_down =0;
-				key_fall_flag=0;
+				key1_fall_flag=0;
+				TimerStop(&Key1_timer);
+				key_holdon_ms=0;
+
+
+
+		}
+	}
+
+
+
+	if(key2_fall_flag==1)
+	{
+		if(HAL_GPIO_ReadPin(GPIOA,GPIO_PIN_10)==0)
+		{
+			if(key_holdon_ms <= 1500)
+			{
+				key_holdon_ms+=100;
+				TimerStart(&Key1_timer);     //开启按键定时器
+
+			}
+			else //按键按下到2000ms就判断长按时间成立，生成长按标志
+			{
+				key_holdon_ms = 0;
+				key2_short_down=0;//清短按键标志
+				key2_long_down = 1;//长按键标志置位
+				key2_fall_flag = 0;//清按键按下标志
+				TimerStop(&Key1_timer);
+				key_holdon_ms=0;
+
+			}
+		}
+		else
+		{
+//
+				key_holdon_ms=0;
+				key2_short_down=1;
+				key2_long_down =0;
+				key2_fall_flag=0;
 				TimerStop(&Key1_timer);
 				key_holdon_ms=0;
 
@@ -100,12 +146,10 @@ void Key1_timer_Callback()
 	}
 
 	//printf("key_holdon_ms	%dms\r\n",key_holdon_ms);
-
-
-
-
-
 }
+
+
+
 
 
 //}
