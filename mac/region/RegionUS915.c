@@ -319,7 +319,7 @@ void RegionUS915InitDefaults( InitType_t type )
             ChannelsDefaultMask[1] = 0x0000;
             ChannelsDefaultMask[2] = 0x0000;
             ChannelsDefaultMask[3] = 0x0000;
-            ChannelsDefaultMask[4] = 0x0000;
+            ChannelsDefaultMask[4] = 0x0010;
             ChannelsDefaultMask[5] = 0x0000;
 
             // Copy channels default mask
