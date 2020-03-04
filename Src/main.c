@@ -69,11 +69,11 @@ int main(void)
 //	printf("\r\n======================================================================");
 //	//printf("\r\n=              (C) COPYRIGHT 2015 STMicroelectronics                 =");
 //    //printf("\r\n=                                                                    =");
-	printf("\r\n=              STM32L0xx Button Application  (Version 1.0.1)         =");
+	printf("STM32L0xx Button Application  (Version 1.0.2)\r\n ");
 //	//printf("\r\n=                                                                    =");
 //	//printf("\r\n=                                              By  RAK Team          =");
 //	printf("\r\n======================================================================");
-	printf("\r\n\r\n");
+//	printf("\r\n\r\n");
 
 	InitLora();
 
