@@ -55,7 +55,7 @@
 /*!
  * Minimal datarate that can be used by the node
  */
-#define IN865_TX_MIN_DATARATE                       DR_1
+#define IN865_TX_MIN_DATARATE                       DR_0
 
 /*!
  * Maximal datarate that can be used by the node
@@ -65,7 +65,7 @@
 /*!
  * Minimal datarate that can be used by the node
  */
-#define IN865_RX_MIN_DATARATE                       DR_1
+#define IN865_RX_MIN_DATARATE                       DR_0
 
 /*!
  * Maximal datarate that can be used by the node
@@ -75,12 +75,12 @@
 /*!
  * Default datarate used by the node
  */
-#define IN865_DEFAULT_DATARATE                      DR_1
+#define IN865_DEFAULT_DATARATE                      DR_0
 
 /*!
  * Minimal Rx1 receive datarate offset
  */
-#define IN865_MIN_RX1_DR_OFFSET                     0
+#define IN865_MIN_RX1_DR_OFFSET                     1
 
 /*!
  * Maximal Rx1 receive datarate offset
