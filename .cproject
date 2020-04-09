@@ -62,7 +62,7 @@
 									<listOptionValue builtIn="false" value="__packed=__attribute__((__packed__))"/>
 									<listOptionValue builtIn="false" value="USE_HAL_DRIVER"/>
 									<listOptionValue builtIn="false" value="STM32L051xx"/>
-									<listOptionValue builtIn="false" value="REGION_EU868"/>
+									<listOptionValue builtIn="false" value="REGION_US915"/>
 								</option>
 								<option id="com.atollic.truestudio.common_options.target.endianess.1854274048" name="Endianess" superClass="com.atollic.truestudio.common_options.target.endianess" useByScannerDiscovery="false" value="com.atollic.truestudio.common_options.target.endianess.little" valueType="enumerated"/>
 								<option id="com.atollic.truestudio.common_options.target.mcpu.191909026" name="Microcontroller" superClass="com.atollic.truestudio.common_options.target.mcpu" useByScannerDiscovery="false" value="STM32L051K8" valueType="enumerated"/>
@@ -174,6 +174,7 @@
 							<option id="com.atollic.truestudio.general.runtimelib.621464302.2146740112" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.621464302"/>
 							<option id="com.atollic.truestudio.toolchain_options.mcu.1069696659.1401927425" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu.1069696659"/>
 							<option id="com.atollic.truestudio.toolchain_options.vendor.804464654.472857259" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor.804464654"/>
+							<targetPlatform archList="all" binaryParser="org.eclipse.cdt.core.ELF" id="com.atollic.truestudio.exe.debug.toolchain.platform" isAbstract="false" name="Debug platform" osList="all" superClass="com.atollic.truestudio.exe.debug.toolchain.platform"/>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.1313966842" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.1545899283">
 								<inputType id="com.atollic.truestudio.as.input.1838922116" name="Input" superClass="com.atollic.truestudio.as.input"/>
 							</tool>
