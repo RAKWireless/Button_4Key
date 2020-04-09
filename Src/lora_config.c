@@ -41,11 +41,11 @@ static void MlmeIndication( MlmeIndication_t *mlmeIndication );
 static int dev_eui(int argc , char * argv[],cfg_op op);
 static int app_eui(int argc , char * argv[],cfg_op op);
 static int app_key(int argc , char * argv[],cfg_op op);
-static int dev_addr(int argc , char * argv[],cfg_op op);
-static int apps_key(int argc , char * argv[],cfg_op op);
-static int nwks_key(int argc , char * argv[],cfg_op op);
+//static int dev_addr(int argc , char * argv[],cfg_op op);
+//static int apps_key(int argc , char * argv[],cfg_op op);
+//static int nwks_key(int argc , char * argv[],cfg_op op);
 
-static int join_mode(int argc , char * argv[],cfg_op op);
+//static int join_mode(int argc , char * argv[],cfg_op op);
 
 struct config_cmd
 {
@@ -57,11 +57,11 @@ struct config_cmd last_cmd_str[]=
 {
 
 
-		{"dev_addr",dev_addr},
-		{"apps_key",apps_key},
-		{"nwks_key",nwks_key},
+//		{"dev_addr",dev_addr},
+//		{"apps_key",apps_key},
+//		{"nwks_key",nwks_key},
 		{"dev_eui",dev_eui},
-		{"join_mode",join_mode},
+		//{"join_mode",join_mode},
 		{"app_eui",app_eui},
 		{"app_key",app_key}
 
@@ -175,7 +175,7 @@ static int analysis_second_string(int argc , char * argv[],cfg_op op)    //∫Û∞ÎΩ
                 ret = device_cfg[i].function(argc,argv_temp,op);
                 if (ret < 0)
                 {
-                    printf("AT CMD parameters error.\n");
+                    printf("AT cmd parameters error.\n");
                     return ret;
                 }
                 break;
@@ -183,7 +183,7 @@ static int analysis_second_string(int argc , char * argv[],cfg_op op)    //∫Û∞ÎΩ
         }
         if (i == sizeof(device_cfg)/sizeof(struct device_cfgt))
         {
-            printf("AT CMD not found.\n");
+            printf("AT cmd not found.\n");
             return -1;
         }
 
@@ -220,7 +220,7 @@ static int handle_lora_config(int argc , char * argv[],cfg_op op)
 		                  ret = last_cmd_str[i].function(argc,argv_temp,op);
 		                  if (ret < 0)
 		                  {
-		                      printf("AT CMD parameters error.\n");
+		                      printf("AT cmd parameters error.\n");
 		                      return ret;
 		                  }
 		                  break;
@@ -235,49 +235,7 @@ static int handle_lora_config(int argc , char * argv[],cfg_op op)
 }
 
 
-//static int handle_device_config(int argc , char * argv[],cfg_op op)
-//{
-////	    int i;
-////	    int ret;
-////
-////	    char *argv_temp[MAX_ARGV];
-////
-////	    //printf("str 	%s\r\n",argv[1]);
-////
-////	    //printf("handle_device_config\r\n");
-////	    argc = parse2_args(argv[1],argv_temp);    //
-////	    //printf("(3) argc:%d			argv[0]:%s		argv[1]:%s\r\n",argc,argv_temp[0],argv_temp[1]);
-////	    if (argc > 2)  //–¥≤Œ ˝µƒ ±∫Ú“≤”¶∏√º”“‘œﬁ÷∆
-////	    {
-////	                printf("Too many parameters.\n");
-////	                return -1;
-////	    }else if(argc < 2&&op==CFG_WRITE)
-////	    {
-////	                printf("Too few parameters.\n");
-////	                return -1;
-////	    }
-////	    for (i = 0; i < sizeof(last_cmd_str)/sizeof(struct config_cmd); i++)
-////	          {
-////	              if (strcmp(argv_temp[0], last_cmd_str[i].name) == 0)
-////	              {
-////	                  ret = last_cmd_str[i].function(argc,argv_temp,op);
-////	                  if (ret < 0)
-////	                  {
-////	                      printf("AT CMD parameters error.\n");
-////	                      return ret;
-////	                  }
-////	                  break;
-////	              }
-////	          }
-////	          if (i == sizeof(last_cmd_str)/sizeof(struct config_cmd))
-////	          {
-////	              printf("AT CMD not found.\n");
-////	              return -1;
-////	          }
-////	   return 0;
-//
-//
-//}
+
 
 
 
@@ -295,20 +253,18 @@ static int dev_eui(int argc , char * argv[],cfg_op op)
 		if(strlen(argv[1])!=16)
 		{
 
-			printf("AT CMD parameters error.\n");
+			printf("AT cmd parameters error.\n");
 		}
 		else
 		{
 		AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.dev_eui, strlen(argv[1]));
 		Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
 		printf("ok\r\n");
-//		printf("app_eui:%02X %02X %02X %02X %02X %02X %02X %02X\r\n",lora_config.app_eui[0],lora_config.app_eui[1],lora_config.app_eui[2],lora_config.app_eui[3],lora_config.app_eui[4],
-//		lora_config.app_eui[5],lora_config.app_eui[6],lora_config.app_eui[7]);
+
 		}
 
 	}
 
-	//printf("dev_eui(int argc , char * argv[],cfg_op op)\r\n");
 	return 0;
 }
 
@@ -332,13 +288,12 @@ static int app_eui(int argc , char * argv[],cfg_op op)
 		AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.app_eui, strlen(argv[1]));
 		Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
 		printf("ok\r\n");
-//		printf("app_eui:%02X %02X %02X %02X %02X %02X %02X %02X\r\n",lora_config.app_eui[0],lora_config.app_eui[1],lora_config.app_eui[2],lora_config.app_eui[3],lora_config.app_eui[4],
-//		lora_config.app_eui[5],lora_config.app_eui[6],lora_config.app_eui[7]);
+
 		}
 
 	}
 
-	//printf("dev_eui(int argc , char * argv[],cfg_op op)\r\n");
+
 	return 0;
 }
 
@@ -360,7 +315,7 @@ void InitLora()
 	  	LoRaMacInitialization( &LoRaMacPrimitives, &LoRaMacCallbacks, LORAMAC_REGION_EU868 );
 
 	  	 mibReq.Type = MIB_ADR;     //ADR √ª”–Œ Ã‚
-	  	 mibReq.Param.AdrEnable = 1;
+	  	 mibReq.Param.AdrEnable = false;
 	  	 LoRaMacMibSetRequestConfirm( &mibReq );
 
 	  	 mibReq.Type = MIB_PUBLIC_NETWORK;
@@ -384,7 +339,7 @@ void InitLora()
  */
 static void MlmeIndication( MlmeIndication_t *mlmeIndication )
 {
-//	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+
 }
 
 static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
@@ -397,7 +352,7 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
 	            if( mlmeConfirm->Status == LORAMAC_EVENT_INFO_STATUS_OK )
 	            {
 	                // Status is OK, node has joined the network
-	            	Serial_PutString("Status is OK, node has joined the network\r\n");
+	            	printf("Node has joined the network\r\n");
 //	            	LED_Init();
 //	            	LED4_State(0);
 //	            	HAL_Delay(500);
@@ -410,7 +365,7 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
 	            }
 	            else
 	            {
-	            	Serial_PutString("Join was not successful. Try to join again\r\n");
+	            	printf("Join was not successful\r\n");
 
 	            }
 	            break;
@@ -424,44 +379,42 @@ static void MlmeConfirm( MlmeConfirm_t *mlmeConfirm )
 
 static void McpsIndication( McpsIndication_t *mcpsIndication )
 {
-	 switch( mcpsIndication->McpsIndication )
-	 	 {
-	        case MCPS_UNCONFIRMED:
-	        {
-
-	//        	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
-	            break;
-	        }
-	        case MCPS_CONFIRMED:
-	        {
-	//        	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
-	            break;
-	        }
-	        case MCPS_PROPRIETARY:
-	        {
-	            break;
-	        }
-	        case MCPS_MULTICAST:
-	        {
-	            break;
-	        }
-	        default:
-	            break;
-	    }
+//	 switch( mcpsIndication->McpsIndication )
+//	 	 {
+//	        case MCPS_UNCONFIRMED:
+//	        {
+//
+//	//        	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+//	            break;
+//	        }
+//	        case MCPS_CONFIRMED:
+//	        {
+//	//        	printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+//	            break;
+//	        }
+//	        case MCPS_PROPRIETARY:
+//	        {
+//	            break;
+//	        }
+//	        case MCPS_MULTICAST:
+//	        {
+//	            break;
+//	        }
+//	        default:
+//	            break;
+//	    }
 
 	 printf("mcpsIndication->Rssi	%d\r\n",mcpsIndication->Rssi);
 
 
-	//Serial_PutString("MCPS confirmed succseeful\r\n");
-	//LED_Indication();
-	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+
 
 }
 
 static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
 {
 
-	//printf("%s	%s	%d	%d\r\n",__FILE__,__func__,__LINE__,mcpsConfirm->McpsRequest);
+
 	if( mcpsConfirm->Status == LORAMAC_EVENT_INFO_STATUS_OK )
 	    {
 
@@ -470,21 +423,16 @@ static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
 	            case MCPS_UNCONFIRMED:
 	            {
 
-	                // Check Datarate
-	                // Check TxPower
+
 	                break;
 	            }
 	            case MCPS_CONFIRMED:
 	            {
 
-	            	Serial_PutString("MCPS confirmed succseeful\r\n");
+	            	printf("MCPS confirmed succseeful\r\n");
 	            	LED_Indication();
 
-	            	//while(1);
-	                // Check Datarate
-	                // Check TxPower
-	                // Check AckReceived
-	                // Check NbTrials
+
 	                break;
 	            }
 	            case MCPS_PROPRIETARY:
@@ -497,16 +445,10 @@ static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
 	    }
 	else
 	{
-		Serial_PutString("Rx confirmed error\r\n");
+		printf("Rx confirmed error\r\n");
 		LED_RED();
 	}
 
-//	printf("NbRetries %d\r\n",mcpsConfirm->NbRetries);
-//	printf("Status %d\r\n",mcpsConfirm->Status);
-//	printf("McpsRequest %d\r\n",mcpsConfirm->McpsRequest);
-//	printf("AckReceived %d\r\n",mcpsConfirm->AckReceived);
-//	printf("TxPower %d\r\n",mcpsConfirm->TxPower);
-//	printf("Datarate %d\r\n",mcpsConfirm->Datarate);
 
 	Radio.Sleep();
 	BoardDeInitMcu();
@@ -520,52 +462,22 @@ static void McpsConfirm( McpsConfirm_t *mcpsConfirm )
 void lora_join(int argc, char *argv[])
 {
  unsigned char i=0;
-// unsigned char temp_dev_eui[]={ 0x47, 0xAA, 0xC8, 0x68, 0x00, 0x43, 0x00, 0x28 };
-// unsigned char temp_app_eui[]={ 0x70, 0xB3, 0xD5, 0x7E, 0xD0, 0x01, 0xA1, 0xE2 };
-// unsigned char temp_app_key[]={ 0x8A, 0xFE, 0x71, 0xA1, 0x45, 0xB2, 0x53, 0xE4, 0x9C, 0x30, 0x31, 0xAD, 0x06, 0x82, 0x77, 0xA1 };
 
-// for(i=0;i<8;i++)
-// {
-//	 lora_config.dev_eui[i]=temp_dev_eui[i];
-//	 lora_config.app_eui[i]=temp_app_eui[i];
-// }
-//
-// for(i=0;i<16;i++)
-//  {
-// 	 lora_config.app_key[i]=temp_app_key[i];
-//
-//  }
 
  LoRaMacStatus_t state;
- //MlmeReq_t mlmeReq;	                // Initialize LoRaMac device unique ID
 
- if(lora_config.join_state==OATT)
- {
- //BoardGetUniqueId( DevEui );
+
+// if(lora_config.join_state==OATT)
+// {
+
  mlmeReq.Type = MLME_JOIN;
-// for(i=0;i<8;i++)
-//              {
-//	 mlmeReq.Req.Join.DevEui[i]=lora_config.dev_eui[i];
-//
-//              }
-// memcpy1( mlmeReq.Req.Join.DevEui,lora_config.dev_eui,8);
 
 
  mlmeReq.Req.Join.DevEui = lora_config.dev_eui;
-// for(i=0;i<8;i++)
-//              {
-//	 mlmeReq.Req.Join.AppEui[i]=lora_config.app_eui[i];
-//
-//              }
-// memcpy1(mlmeReq.Req.Join.AppEui,lora_config.app_eui,8);
+
 
  mlmeReq.Req.Join.AppEui = lora_config.app_eui;
-// for(i=0;i<16;i++)
-//              {
-//	 mlmeReq.Req.Join.AppKey[i]=lora_config.app_key[i];
-//
-//              }
-// memcpy1( mlmeReq.Req.Join.AppKey,lora_config.app_key,16);
+
 
  mlmeReq.Req.Join.AppKey = lora_config.app_key;
  mlmeReq.Req.Join.Datarate = DR_1;
@@ -579,71 +491,55 @@ else
 {
    printf("Joining ... ...\r\n");
 }
- }
- else
- {
-
-
-//    	 for(i=0;i<3;i++)
-//    	 {
-//    		mibReq.Param.DevAddr[i]=lora_config.dev_addr[i];
+// }
+// else
+// {
 //
-//     	 }
-//	 	 	 mibReq.Type = MIB_NET_ID;
-//	         mibReq.Param.NetID = 0;
-//	         LoRaMacMibSetRequestConfirm( &mibReq );
-
-
- 	 		 mibReq.Param.DevAddr=(uint32_t)lora_config.dev_addr[3]+  ((uint32_t)lora_config.dev_addr[2]<<8)+
- 	 				((uint32_t)lora_config.dev_addr[1]<<16) + ((uint32_t)lora_config.dev_addr[0]<<24);
-
-
-             mibReq.Type = MIB_DEV_ADDR;
-
-//            mibReq.Param.DevAddr = lora_config.dev_addr;
-             LoRaMacMibSetRequestConfirm( &mibReq );
 //
-
-
-//             for(i=0;i<16;i++)
+//
+//
+//
+// 	 		 mibReq.Param.DevAddr=(uint32_t)lora_config.dev_addr[3]+  ((uint32_t)lora_config.dev_addr[2]<<8)+
+// 	 				((uint32_t)lora_config.dev_addr[1]<<16) + ((uint32_t)lora_config.dev_addr[0]<<24);
+//
+//
+//             mibReq.Type = MIB_DEV_ADDR;
+//
+//
+//             LoRaMacMibSetRequestConfirm( &mibReq );
+//
+//
+//
+//
+//             mibReq.Type = MIB_NWK_SKEY;
+//             mibReq.Param.NwkSKey = lora_config.nwks_key;
+//             LoRaMacMibSetRequestConfirm( &mibReq );
+//
+//
+//
+//
+//             mibReq.Type = MIB_APP_SKEY;
+//             mibReq.Param.AppSKey = lora_config.apps_key;
+//             LoRaMacMibSetRequestConfirm( &mibReq );
+//
+//
+//
+//             mibReq.Type = MIB_NETWORK_JOINED;
+//             mibReq.Param.IsNetworkJoined = true;
+//             state=LoRaMacMibSetRequestConfirm( &mibReq );
+//
+//
+//
+//             if( state!= LORAMAC_STATUS_OK )
 //             {
-//            	 mibReq.Param.NwkSKey[i]=lora_config.nwks_key[i];
-//
+//             	printf("+MIBREQ:%d\r\nERROR\r\n",state);
 //             }
-
-             mibReq.Type = MIB_NWK_SKEY;
-             mibReq.Param.NwkSKey = lora_config.nwks_key;
-             LoRaMacMibSetRequestConfirm( &mibReq );
-
-
-//             for(i=0;i<16;i++)
-//             {
-//            	 mibReq.Param.AppSKey[i]=lora_config.apps_key[i];
 //
-//             }
-
-             mibReq.Type = MIB_APP_SKEY;
-             mibReq.Param.AppSKey = lora_config.apps_key;
-             LoRaMacMibSetRequestConfirm( &mibReq );
-
-
-
-             mibReq.Type = MIB_NETWORK_JOINED;
-             mibReq.Param.IsNetworkJoined = true;
-             state=LoRaMacMibSetRequestConfirm( &mibReq );
-
-
-
-             if( state!= LORAMAC_STATUS_OK )
-             {
-             	printf("+MIBREQ:%d\r\nERROR\r\n",state);
-             }
-
-             printf("ok\r\n");
-             Radio.Sleep();
-             BoardDeInitMcu();
-             SX126xAntDeinit( );
- }
+//             printf("ok\r\n");
+//             Radio.Sleep();
+//             BoardDeInitMcu();
+//             SX126xAntDeinit( );
+// }
 }
 
 
@@ -655,7 +551,7 @@ void lora_send(int port,const unsigned char* Appdata)
 	mcpsReq.Req.Confirmed.fBuffer = Appdata;
 	mcpsReq.Req.Confirmed.fBufferSize = 1;
 	mcpsReq.Req.Confirmed.Datarate = DR_1;
-	mcpsReq.Req.Confirmed.NbTrials=8;
+	mcpsReq.Req.Confirmed.NbTrials=1;
 
 
 
@@ -671,36 +567,36 @@ void lora_send(int port,const unsigned char* Appdata)
 }
 
 
-static int join_mode(int argc , char * argv[],cfg_op op)
-{
-	if(op==CFG_READ)
-	{
-		if(lora_config.join_state==OATT)
-			printf("join_mode: OATT\r\n");
-		else
-			printf("join_mode: ABP\r\n");
-	}
-	else
-	{
-		if(argv[1][0]==0x30)
-		{
-			lora_config.join_state=OATT;
-			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
-			printf("ok\r\n");
-		}
-		else
-		{
-			lora_config.join_state=ABP;
-			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
-			printf("ok\r\n");
-		}
-
-
-	}
-
-	return 0;
-
-}
+//static int join_mode(int argc , char * argv[],cfg_op op)
+//{
+//	if(op==CFG_READ)
+//	{
+//		if(lora_config.join_state==OATT)
+//			printf("join_mode: OATT\r\n");
+//		else
+//			printf("join_mode: ABP\r\n");
+//	}
+//	else
+//	{
+//		if(argv[1][0]==0x30)
+//		{
+//			lora_config.join_state=OATT;
+//			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
+//			printf("ok\r\n");
+//		}
+//		else
+//		{
+//			lora_config.join_state=ABP;
+//			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
+//			printf("ok\r\n");
+//		}
+//
+//
+//	}
+//
+//	return 0;
+//
+//}
 
 
 
@@ -723,7 +619,7 @@ static int app_key(int argc , char * argv[],cfg_op op)
 			if(strlen(argv[1])!=32)
 					{
 
-						printf("AT CMD parameters error.\n");
+						printf("AT cmd parameters error.\n");
 					}
 			else
 			{
@@ -737,103 +633,103 @@ static int app_key(int argc , char * argv[],cfg_op op)
 		return 0;
 }
 
-static int apps_key(int argc , char * argv[],cfg_op op)
-{
-	char i;
-	if(op==CFG_READ)
-		{
-			printf("apps_key:");
-			for(i=0;i<16;i++)
-			{
-				printf("%02X",lora_config.apps_key[i]);
+//static int apps_key(int argc , char * argv[],cfg_op op)
+//{
+//	char i;
+//	if(op==CFG_READ)
+//		{
+//			printf("apps_key:");
+//			for(i=0;i<16;i++)
+//			{
+//				printf("%02X",lora_config.apps_key[i]);
+//
+//			}
+//			printf("\r\n");
+//
+//		}
+//		else
+//		{
+//			if(strlen(argv[1])!=32)
+//					{
+//
+//						printf("AT cmd parameters error.\n");
+//					}
+//			else
+//			{
+//			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.apps_key, strlen(argv[1]));
+//
+//			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
+//			printf("ok\r\n");
+//			}
+//		}
+//
+//		return 0;
+//}
 
-			}
-			printf("\r\n");
+//static int nwks_key(int argc , char * argv[],cfg_op op)
+//{
+//	char i;
+//	if(op==CFG_READ)
+//		{
+//			printf("nwks_key:");
+//			for(i=0;i<16;i++)
+//			{
+//				printf("%02X",lora_config.nwks_key[i]);
+//
+//			}
+//			printf("\r\n");
+//		}
+//		else
+//		{
+//			if(strlen(argv[1])!=32)
+//					{
+//
+//						printf("AT cmd parameters error.\n");
+//					}
+//			else
+//			{
+//			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.nwks_key, strlen(argv[1]));
+//
+//			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
+//			printf("ok\r\n");
+//			}
+//		}
+//
+//		return 0;
+//}
 
-		}
-		else
-		{
-			if(strlen(argv[1])!=32)
-					{
-
-						printf("AT CMD parameters error.\n");
-					}
-			else
-			{
-			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.apps_key, strlen(argv[1]));
-
-			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
-			printf("ok\r\n");
-			}
-		}
-
-		return 0;
-}
-
-static int nwks_key(int argc , char * argv[],cfg_op op)
-{
-	char i;
-	if(op==CFG_READ)
-		{
-			printf("nwks_key:");
-			for(i=0;i<16;i++)
-			{
-				printf("%02X",lora_config.nwks_key[i]);
-
-			}
-			printf("\r\n");
-		}
-		else
-		{
-			if(strlen(argv[1])!=32)
-					{
-
-						printf("AT CMD parameters error.\n");
-					}
-			else
-			{
-			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.nwks_key, strlen(argv[1]));
-
-			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
-			printf("ok\r\n");
-			}
-		}
-
-		return 0;
-}
-
-static int dev_addr(int argc , char * argv[],cfg_op op)
-{
-	char i;
-	if(op==CFG_READ)
-		{
-			printf("dev_addr:");
-			for(i=0;i<4;i++)
-			{
-				printf("%02X",lora_config.dev_addr[i]);
-
-			}
-			printf("\r\n");
-
-		}
-		else
-		{
-			if(strlen(argv[1])!=8)
-					{
-
-						printf("AT CMD parameters error.\n");
-					}
-			else
-			{
-			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.dev_addr, strlen(argv[1]));
-
-			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
-			printf("ok\r\n");
-			}
-		}
-
-		return 0;
-}
+//static int dev_addr(int argc , char * argv[],cfg_op op)
+//{
+//	char i;
+//	if(op==CFG_READ)
+//		{
+//			printf("dev_addr:");
+//			for(i=0;i<4;i++)
+//			{
+//				printf("%02X",lora_config.dev_addr[i]);
+//
+//			}
+//			printf("\r\n");
+//
+//		}
+//		else
+//		{
+//			if(strlen(argv[1])!=8)
+//					{
+//
+//						printf("AT cmd parameters error.\n");
+//					}
+//			else
+//			{
+//			AsciiToHex((unsigned char *)argv[1], (unsigned char *)lora_config.dev_addr, strlen(argv[1]));
+//
+//			Flash_write(FLASH_USER_START_ADDR,&lora_config,sizeof(lora_config_t));
+//			printf("ok\r\n");
+//			}
+//		}
+//
+//		return 0;
+//}
 
 
 

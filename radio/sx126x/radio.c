@@ -1158,23 +1158,23 @@ void RadioIrqProcess( void )
             }
         }
 
-        if( ( irqRegs & IRQ_PREAMBLE_DETECTED ) == IRQ_PREAMBLE_DETECTED )
-        {
-        	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
-            //__NOP( );
-        }
-
-        if( ( irqRegs & IRQ_SYNCWORD_VALID ) == IRQ_SYNCWORD_VALID )
-        {
-        	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
-            //__NOP( );
-        }
-
-        if( ( irqRegs & IRQ_HEADER_VALID ) == IRQ_HEADER_VALID )
-        {
-        	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
-            //__NOP( );
-        }
+//        if( ( irqRegs & IRQ_PREAMBLE_DETECTED ) == IRQ_PREAMBLE_DETECTED )
+//        {
+//        	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+//            //__NOP( );
+//        }
+//
+//        if( ( irqRegs & IRQ_SYNCWORD_VALID ) == IRQ_SYNCWORD_VALID )
+//        {
+//        	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+//            //__NOP( );
+//        }
+//
+//        if( ( irqRegs & IRQ_HEADER_VALID ) == IRQ_HEADER_VALID )
+//        {
+//        	//printf("%s	%s	%d\r\n",__FILE__,__func__,__LINE__);
+//            //__NOP( );
+//        }
 
         if( ( irqRegs & IRQ_HEADER_ERROR ) == IRQ_HEADER_ERROR )
         {

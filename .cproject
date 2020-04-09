@@ -55,6 +55,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Button_051/mac}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Button_051/radio/sx126x}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Button_051/system/crypto}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Button_051/RTT}&quot;"/>
 								</option>
 								<option id="com.atollic.truestudio.gcc.symbols.defined.1670122205" name="Defined symbols" superClass="com.atollic.truestudio.gcc.symbols.defined" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="__weak=__attribute__((weak))"/>
@@ -157,6 +158,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Button_051/mac}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Button_051/radio/sx126x}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Button_051/system/crypto}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Button_051/RTT}&quot;"/>
 								</option>
 								<inputType id="com.atollic.truestudio.gcc.input.1611118792" superClass="com.atollic.truestudio.gcc.input"/>
 							</tool>
@@ -165,6 +167,24 @@
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.1598018031" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.428260"/>
 							<tool id="com.atollic.truestudio.ar.base.2020677144" name="Archiver" superClass="com.atollic.truestudio.ar.base.759813971"/>
 							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.1023087132" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput.839033486"/>
+						</toolChain>
+					</folderInfo>
+					<folderInfo id="com.atollic.truestudio.exe.debug.1518366166.1899575929" name="/" resourcePath="RTT">
+						<toolChain id="com.atollic.truestudio.exe.debug.toolchain.1157594018" name="Atollic ARM Tools" superClass="com.atollic.truestudio.exe.debug.toolchain" unusedChildren="">
+							<option id="com.atollic.truestudio.general.runtimelib.621464302.2146740112" name="Runtime Library" superClass="com.atollic.truestudio.general.runtimelib.621464302"/>
+							<option id="com.atollic.truestudio.toolchain_options.mcu.1069696659.1401927425" name="Microcontroller" superClass="com.atollic.truestudio.toolchain_options.mcu.1069696659"/>
+							<option id="com.atollic.truestudio.toolchain_options.vendor.804464654.472857259" name="Vendor name" superClass="com.atollic.truestudio.toolchain_options.vendor.804464654"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.as.1313966842" name="Assembler" superClass="com.atollic.truestudio.exe.debug.toolchain.as.1545899283">
+								<inputType id="com.atollic.truestudio.as.input.1838922116" name="Input" superClass="com.atollic.truestudio.as.input"/>
+							</tool>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.gcc.454500495" name="C Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gcc.1836874447">
+								<inputType id="com.atollic.truestudio.gcc.input.156282091" superClass="com.atollic.truestudio.gcc.input"/>
+							</tool>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.ld.1004307744" name="C Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ld.1444973427"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.gpp.100522128" name="C++ Compiler" superClass="com.atollic.truestudio.exe.debug.toolchain.gpp.981298185"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.ldcc.1809833936" name="C++ Linker" superClass="com.atollic.truestudio.exe.debug.toolchain.ldcc.428260"/>
+							<tool id="com.atollic.truestudio.ar.base.390097050" name="Archiver" superClass="com.atollic.truestudio.ar.base.759813971"/>
+							<tool id="com.atollic.truestudio.exe.debug.toolchain.secoutput.733657227" name="Other" superClass="com.atollic.truestudio.exe.debug.toolchain.secoutput.839033486"/>
 						</toolChain>
 					</folderInfo>
 					<folderInfo id="com.atollic.truestudio.exe.debug.1518366166.1572844704" name="/" resourcePath="Drivers/STM32L0xx_HAL_Driver/Src">
@@ -191,6 +211,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Button_051/mac}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Button_051/radio/sx126x}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Button_051/system/crypto}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Button_051/RTT}&quot;"/>
 								</option>
 								<inputType id="com.atollic.truestudio.gcc.input.545066438" superClass="com.atollic.truestudio.gcc.input"/>
 							</tool>
@@ -208,6 +229,7 @@
 					</fileInfo>
 					<sourceEntries>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="RTT"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="Src"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="boards/Button"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="mac"/>

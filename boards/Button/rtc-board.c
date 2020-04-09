@@ -375,20 +375,18 @@ void RtcRecoverMcuStatus( void )
     {
         NonScheduledWakeUp = true;
     }
-    // check the clk source and set to full speed if we are coming from sleep mode
+
     if( ( __HAL_RCC_GET_SYSCLK_SOURCE( ) == RCC_SYSCLKSOURCE_STATUS_HSI ) ||
         ( __HAL_RCC_GET_SYSCLK_SOURCE( ) == RCC_SYSCLKSOURCE_STATUS_MSI ) )
     {
-        //BoardInitMcu( );
+
 
     }
 
-    //UnLp_uart();
+
+    //SystemClockReConfig();
     SystemClock_Config();
     MX_USART2_UART_Init();
-    //HAL_UART_MspInit(&huart2);
-    //__HAL_RCC_DMA1_CLK_ENABLE();
-    //SX126xIoInit();
     MX_SPI1_Init();
 
 

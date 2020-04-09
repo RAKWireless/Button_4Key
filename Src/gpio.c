@@ -34,7 +34,7 @@ extern  unsigned char key2_fall_flag;
 /* Configure GPIO                                                             */
 /*----------------------------------------------------------------------------*/
 /* USER CODE BEGIN 1 */
-extern TimerEvent_t Key1_timer;
+extern TimerEvent_t Key_timer;
 
 
 /* USER CODE END 1 */
@@ -86,7 +86,7 @@ void Key1_Fall()
 	//merStart(&Key1_timer);     //开启按键定时器
 	key1_fall_flag=1;
 	//L_Delay(100;
-	TimerStart(&Key1_timer);     //开启按键定时器
+	TimerStart(&Key_timer);     //开启按键定时器
 
 //	GPIO_InitTypeDef GPIO_InitStruct = {0};
 //	GPIO_InitStruct.Pin = GPIO_PIN_9;
@@ -113,7 +113,7 @@ void Key2_Fall()
 
 	key2_fall_flag=1;
 	//L_Delay(100;
-	TimerStart(&Key1_timer);     //开启按键定时器
+	TimerStart(&Key_timer);     //开启按键定时器
 //	printf("KEY2 Fall\r\n");
 //	HAL_SPI_DeInit(&hspi1);
 //	LED_Init();

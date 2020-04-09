@@ -23,10 +23,6 @@
 #include "stm32l0xx.h"
 #include "utilities.h"
 #include "gpio.h"
-//#include "adc.h"
-//#include "spi.h"
-//#include "i2c.h"
-//#include "uart.h"
 #include "timer.h"
 #include "board-config.h"
 #include "rtc-board.h"
@@ -53,23 +49,33 @@ Gpio_t Led4;
 Gpio_t Led5;
 
 
-TimerEvent_t Key1_timer;
-TimerEvent_t Key2_timer;
+extern void Adc_timer_Callback(void);
 
+TimerEvent_t Key_timer;
+TimerEvent_t Adc_timer;
+
+extern ADC_HandleTypeDef hadc;
 
 volatile unsigned int key_holdon_ms=0;
 volatile unsigned char key1_fall_flag=0;
 volatile unsigned char key2_fall_flag=0;
 
-volatile unsigned char key_short_down=0;
-volatile unsigned char key_long_down=0;
+volatile unsigned char key1_short_down=0;
+volatile unsigned char key1_long_down=0;
 
 volatile unsigned char key2_short_down=0;
 volatile unsigned char key2_long_down=0;
+TimerEvent_t Batteryalarm_timer;
+void Batteryalarm_timer_callback()
+{
+	 static unsigned char state= 0;
+	 state = !state;
+	 LED5_State(!state);
+	 TimerStart(&Batteryalarm_timer);
+}
 
 
-
-void Key1_timer_Callback()
+void Key_timer_Callback()
 {
 	if(key1_fall_flag==1)
 	{
@@ -78,16 +84,16 @@ void Key1_timer_Callback()
 			if(key_holdon_ms <= 1500)
 			{
 				key_holdon_ms+=100;
-				TimerStart(&Key1_timer);     //开启按键定时器
+				TimerStart(&Key_timer);     //开启按键定时器
 
 			}
 			else //按键按下到2000ms就判断长按时间成立，生成长按标志
 			{
 				key_holdon_ms = 0;
-				key_short_down=0;//清短按键标志
-				key_long_down = 1;//长按键标志置位
+				key1_short_down=0;//清短按键标志
+				key1_long_down = 1;//长按键标志置位
 				key1_fall_flag = 0;//清按键按下标志
-				TimerStop(&Key1_timer);
+				TimerStop(&Key_timer);
 				key_holdon_ms=0;
 
 			}
@@ -96,10 +102,10 @@ void Key1_timer_Callback()
 		{
 //
 				key_holdon_ms=0;
-				key_short_down=1;
-				key_long_down =0;
+				key1_short_down=1;
+				key1_long_down =0;
 				key1_fall_flag=0;
-				TimerStop(&Key1_timer);
+				TimerStop(&Key_timer);
 				key_holdon_ms=0;
 
 
@@ -116,7 +122,7 @@ void Key1_timer_Callback()
 			if(key_holdon_ms <= 1500)
 			{
 				key_holdon_ms+=100;
-				TimerStart(&Key1_timer);     //开启按键定时器
+				TimerStart(&Key_timer);     //开启按键定时器
 
 			}
 			else //按键按下到2000ms就判断长按时间成立，生成长按标志
@@ -125,7 +131,7 @@ void Key1_timer_Callback()
 				key2_short_down=0;//清短按键标志
 				key2_long_down = 1;//长按键标志置位
 				key2_fall_flag = 0;//清按键按下标志
-				TimerStop(&Key1_timer);
+				TimerStop(&Key_timer);
 				key_holdon_ms=0;
 
 			}
@@ -137,7 +143,7 @@ void Key1_timer_Callback()
 				key2_short_down=1;
 				key2_long_down =0;
 				key2_fall_flag=0;
-				TimerStop(&Key1_timer);
+				TimerStop(&Key_timer);
 				key_holdon_ms=0;
 
 
@@ -147,6 +153,7 @@ void Key1_timer_Callback()
 
 	//printf("key_holdon_ms	%dms\r\n",key_holdon_ms);
 }
+
 
 
 
@@ -258,16 +265,16 @@ void BoardInitMcu( void )
 		KeyCallbackInit();
 		RtcInit();
 
-		TimerInit(&Key1_timer,Key1_timer_Callback);
-		TimerSetValue(&Key1_timer,200);
-//		TimerStart(&Key1_timer);
-		FLASH_Read(FLASH_USER_START_ADDR, &lora_config, sizeof( lora_config_t));  //注意第二个参数的指针
+		TimerInit(&Key_timer,Key_timer_Callback);
+		TimerSetValue(&Key_timer,200);
 
-//	    HAL_DBGMCU_EnableDBGSleepMode( );
-//		GpioInit( &Led1, LED_1, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-//      GpioInit( &Led2, LED_2, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
-//      GpioInit( &Led3, LED_3, PIN_OUTPUT, PIN_PUSH_PULL, PIN_NO_PULL, 0 );
+		FLASH_Read(FLASH_USER_START_ADDR, &lora_config, sizeof( lora_config_t));
 
+		TimerInit(&Adc_timer,Adc_timer_Callback);
+		TimerSetValue(&Adc_timer,900*1000);
+		TimerStart(&Adc_timer);
+		TimerInit(&Batteryalarm_timer,Batteryalarm_timer_callback);
+		TimerSetValue(&Batteryalarm_timer,1000);
 
 }
 
@@ -308,7 +315,7 @@ void LED_ALL_ON()
 	LED2_State(0);
 	LED3_State(0);
 	LED4_State(0);
-	//LED5_State(0);
+
 }
 
 void LED_ALL_OFF()
@@ -317,7 +324,6 @@ void LED_ALL_OFF()
 	LED2_State(1);
 	LED3_State(1);
 	LED4_State(1);
-	//LED5_State(1);
 }
 
 void LED_RED()
@@ -330,9 +336,10 @@ void LED_RED()
 	LED5_State(0);
 	HAL_Delay(150);
 	LED5_State(1);
-
-
 }
+
+
+
 
 void LED_Indication()
 {
@@ -383,17 +390,19 @@ void BoardResetMcu( void )
 
 }
 
+
 void BoardDeInitMcu( void )
 {
 
 
 	HAL_SPI_DeInit(&hspi1);
-	LED_Init();
+//	LED_Init();
+
 	LED1_State(1);
 	LED2_State(1);
 	LED3_State(1);
 	LED4_State(1);
-	LED5_State(1);
+//	LED5_State(1);
 
 	//__HAL_RCC_DMA1_CLK_DISABLE();
 	//SX126xIoDeInit();
@@ -408,17 +417,7 @@ uint32_t BoardGetRandomSeed( void )
     return ( ( *( uint32_t* )ID1 ) ^ ( *( uint32_t* )ID2 ) ^ ( *( uint32_t* )ID3 ) );
 }
 
-void BoardGetUniqueId( uint8_t *id )
-{
-    id[7] = ( ( *( uint32_t* )ID1 )+ ( *( uint32_t* )ID3 ) ) >> 24;
-    id[6] = ( ( *( uint32_t* )ID1 )+ ( *( uint32_t* )ID3 ) ) >> 16;
-    id[5] = ( ( *( uint32_t* )ID1 )+ ( *( uint32_t* )ID3 ) ) >> 8;
-    id[4] = ( ( *( uint32_t* )ID1 )+ ( *( uint32_t* )ID3 ) );
-    id[3] = ( ( *( uint32_t* )ID2 ) ) >> 24;
-    id[2] = ( ( *( uint32_t* )ID2 ) ) >> 16;
-    id[1] = ( ( *( uint32_t* )ID2 ) ) >> 8;
-    id[0] = ( ( *( uint32_t* )ID2 ) );
-}
+
 
 uint16_t BoardBatteryMeasureVolage( void )
 {
@@ -435,111 +434,8 @@ uint8_t BoardGetBatteryLevel( void )
     return 0;
 }
 
-//static void BoardUnusedIoInit( void )
-//{
-//    HAL_DBGMCU_EnableDBGSleepMode( );
-//    HAL_DBGMCU_EnableDBGStopMode( );
-//    HAL_DBGMCU_EnableDBGStandbyMode( );
-//}
 
-//void SystemClockConfig( void )
-//{
-//    RCC_OscInitTypeDef RCC_OscInitStruct;
-//    RCC_ClkInitTypeDef RCC_ClkInitStruct;
-//    RCC_PeriphCLKInitTypeDef PeriphClkInit;
-//
-//    __HAL_RCC_PWR_CLK_ENABLE( );
-//
-//    __HAL_PWR_VOLTAGESCALING_CONFIG( PWR_REGULATOR_VOLTAGE_SCALE1 );
-//
-//    RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_LSE;
-//    RCC_OscInitStruct.HSEState = RCC_HSE_OFF;
-//    RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-//    RCC_OscInitStruct.LSEState = RCC_LSE_ON;
-//    RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-//    RCC_OscInitStruct.PLL.PLLState        = RCC_PLL_ON;
-//    RCC_OscInitStruct.PLL.PLLSource       = RCC_PLLSOURCE_HSI;
-//    RCC_OscInitStruct.PLL.PLLMUL          = RCC_PLLMUL_6;
-//    RCC_OscInitStruct.PLL.PLLDIV          = RCC_PLLDIV_3;
-//    if( HAL_RCC_OscConfig( &RCC_OscInitStruct ) != HAL_OK )
-//    {
-//        assert_param( FAIL );
-//    }
-//
-//    RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
-//    RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-//    RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-//    RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
-//    RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
-//    if( HAL_RCC_ClockConfig( &RCC_ClkInitStruct, FLASH_LATENCY_1 ) != HAL_OK )
-//    {
-//        assert_param( FAIL );
-//    }
-//
-//    PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
-//    PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
-//    if( HAL_RCCEx_PeriphCLKConfig( &PeriphClkInit ) != HAL_OK )
-//    {
-//        assert_param( FAIL );
-//    }
-//
-//    HAL_SYSTICK_Config( HAL_RCC_GetHCLKFreq( ) / 1000 );
-//
-//    HAL_SYSTICK_CLKSourceConfig( SYSTICK_CLKSOURCE_HCLK );
-//
-//    // SysTick_IRQn interrupt configuration
-//    HAL_NVIC_SetPriority( SysTick_IRQn, 0, 0 );
-//}
 
-//void CalibrateSystemWakeupTime( void )
-//{
-//    if( SystemWakeupTimeCalibrated == false )
-//    {
-//        TimerInit( &CalibrateSystemWakeupTimeTimer, OnCalibrateSystemWakeupTimeTimerEvent );
-//        TimerSetValue( &CalibrateSystemWakeupTimeTimer, 1000 );
-//        TimerStart( &CalibrateSystemWakeupTimeTimer );
-//        while( SystemWakeupTimeCalibrated == false )
-//        {
-//            TimerLowPowerHandler( );
-//        }
-//    }
-//}
-
-//void SystemClockReConfig( void )
-//{
-//    __HAL_RCC_PWR_CLK_ENABLE( );
-//    __HAL_PWR_VOLTAGESCALING_CONFIG( PWR_REGULATOR_VOLTAGE_SCALE1 );
-//
-//    /* Enable HSI */
-//    __HAL_RCC_HSI_CONFIG( RCC_HSI_ON );
-//
-//    /* Wait till HSE is ready */
-//    while( __HAL_RCC_GET_FLAG( RCC_FLAG_HSIRDY ) == RESET )
-//    {
-//    }
-//
-//    /* Enable PLL */
-//    __HAL_RCC_PLL_ENABLE( );
-//
-//    /* Wait till PLL is ready */
-//    while( __HAL_RCC_GET_FLAG( RCC_FLAG_PLLRDY ) == RESET )
-//    {
-//    }
-//
-//    /* Select PLL as system clock source */
-//    __HAL_RCC_SYSCLK_CONFIG ( RCC_SYSCLKSOURCE_PLLCLK );
-//
-//    /* Wait till PLL is used as system clock source */
-//    while( __HAL_RCC_GET_SYSCLK_SOURCE( ) != RCC_SYSCLKSOURCE_STATUS_PLLCLK )
-//    {
-//    }
-//}
-
-//void SysTick_Handler( void )
-//{
-//    HAL_IncTick( );
-//    HAL_SYSTICK_IRQHandler( );
-//}
 
 uint8_t GetBoardPowerSource( void )
 {

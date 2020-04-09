@@ -171,9 +171,9 @@ void HAL_GPIO_Init(GPIO_TypeDef  *GPIOx, GPIO_InitTypeDef *GPIO_Init)
   uint32_t temp = 0x00U;
  
   /* Check the parameters */
-  assert_param(IS_GPIO_MODE(GPIO_Init->Mode));
-  assert_param(IS_GPIO_PULL(GPIO_Init->Pull));
-  assert_param(IS_GPIO_PIN_AVAILABLE(GPIOx,(GPIO_Init->Pin)));
+//  assert_param(IS_GPIO_MODE(GPIO_Init->Mode));
+//  assert_param(IS_GPIO_PULL(GPIO_Init->Pull));
+//  assert_param(IS_GPIO_PIN_AVAILABLE(GPIOx,(GPIO_Init->Pin)));
 
   /* Configure the port pins */
   while (((GPIO_Init->Pin) >> position) != 0)

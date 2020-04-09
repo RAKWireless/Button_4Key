@@ -28,7 +28,7 @@ void Flash_write(uint32_t wr_addr, void *buffer, uint16_t wr_len)
     uint32_t *wr_data = buffer;
 
     if (wr_addr % 4 != 0 || wr_len%4 != 0) {
-    	//printf("wr_len	%d\r\n",wr_len);
+
         while(1);
     }
 
@@ -48,8 +48,7 @@ void Flash_write(uint32_t wr_addr, void *buffer, uint16_t wr_len)
 void FLASH_Read(uint32_t addr, void *buffer, uint16_t len)
 {
        memcpy(buffer, (void *)addr, len);
-       //__IO uint32_t
-       //  memcpy(buffer, (__IO uint32_t  *)addr, len);
+
 }
 
 

@@ -232,16 +232,16 @@ int _write(int file, char *ptr, int len)
 }
 
 
-void Serial_PutString(char *p_string)
-{
-  uint16_t length = 0;
-
-  while (p_string[length] != '\0')
-  {
-    length++;
-  }
-  HAL_UART_Transmit(&huart2, p_string, length, 1000);
-}
+//void Serial_PutString(char *p_string)
+//{
+//  uint16_t length = 0;
+//
+//  while (p_string[length] != '\0')
+//  {
+//    length++;
+//  }
+//  HAL_UART_Transmit(&huart2, p_string, length, 1000);
+//}
 
 /* USER CODE END 1 */
 
